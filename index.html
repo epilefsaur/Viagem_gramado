@@ -196,7 +196,7 @@
         
         /* Estilos principais (quando logado) */
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             display: none; /* Escondido inicialmente */
         }
@@ -306,25 +306,79 @@
             background-color: var(--accent);
         }
         
-        .main-container {
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
+        /* Sistema de Abas */
+        .tabs-container {
+            margin-bottom: 25px;
+            background-color: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            overflow: hidden;
         }
         
-        @media (min-width: 992px) {
-            .main-container {
-                flex-direction: row;
-            }
+        .tabs-header {
+            display: flex;
+            background-color: var(--primary);
+            border-bottom: 3px solid var(--secondary);
+        }
+        
+        .tab-btn {
+            flex: 1;
+            padding: 18px 20px;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .tab-btn:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+        
+        .tab-btn.active {
+            background-color: white;
+            color: var(--primary);
+            position: relative;
+        }
+        
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -3px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background-color: var(--primary);
+        }
+        
+        .tab-content {
+            display: none;
+            padding: 30px;
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .tab-content.active {
+            display: block;
         }
         
         /* Painel de Adição */
         .add-panel {
-            flex: 1;
             background-color: white;
             border-radius: 15px;
-            padding: 20px;
+            padding: 25px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 25px;
         }
         
         .add-panel h2 {
@@ -352,7 +406,7 @@
             color: var(--primary);
         }
         
-        select, textarea {
+        select, textarea, input {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid #ddd;
@@ -361,7 +415,7 @@
             transition: border 0.3s;
         }
         
-        select:focus, textarea:focus {
+        select:focus, textarea:focus, input:focus {
             outline: none;
             border-color: var(--primary);
         }
@@ -400,12 +454,11 @@
             background-color: #3d8b40;
         }
         
-        /* Visualizador de Agenda */
+        /* Visualizador de Agenda (Aba Agenda) */
         .viewer-panel {
-            flex: 2;
             background-color: white;
             border-radius: 15px;
-            padding: 20px;
+            padding: 25px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
         
@@ -463,14 +516,25 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .day-counter {
+            font-size: 0.95rem;
+            color: #666;
+            font-weight: normal;
+            background-color: #f0f7ff;
+            padding: 5px 12px;
+            border-radius: 20px;
         }
         
         .day-total-time {
             font-size: 0.9rem;
             color: #666;
             font-weight: normal;
-            background-color: #f0f7ff;
-            padding: 5px 10px;
+            background-color: #e8f5e9;
+            padding: 5px 12px;
             border-radius: 20px;
         }
         
@@ -613,6 +677,188 @@
             display: none;
         }
         
+        /* Visualização por Horário (Nova Aba) */
+        .timeline-container {
+            background-color: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+        }
+        
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        
+        .timeline-header h2 {
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .timeline-day-selector {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+        
+        .timeline-day-btn {
+            padding: 10px 20px;
+            background-color: #e9ecef;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+        
+        .timeline-day-btn:hover {
+            background-color: #dde5ec;
+        }
+        
+        .timeline-day-btn.active {
+            background-color: var(--primary);
+            color: white;
+        }
+        
+        .timeline-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            min-height: 600px;
+        }
+        
+        .timeline-hour-row {
+            display: flex;
+            align-items: stretch;
+            min-height: 70px;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .timeline-hour-row:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .timeline-hour-label {
+            width: 100px;
+            background-color: var(--primary);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1rem;
+            padding: 10px;
+        }
+        
+        .timeline-hour-content {
+            flex: 1;
+            background-color: #f8f9fa;
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            min-height: 70px;
+        }
+        
+        .timeline-hour-content.empty {
+            color: #95a5a6;
+            font-style: italic;
+            font-size: 1rem;
+        }
+        
+        .timeline-activity {
+            width: 100%;
+            background-color: #e8f6f3;
+            border-left: 5px solid var(--primary);
+            border-radius: 6px;
+            padding: 15px;
+        }
+        
+        .timeline-activity.felipe {
+            background-color: rgba(58, 110, 165, 0.1);
+            border-left-color: var(--felipe);
+        }
+        
+        .timeline-activity.bruna {
+            background-color: rgba(233, 30, 99, 0.1);
+            border-left-color: var(--bruna);
+        }
+        
+        .timeline-activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        
+        .timeline-activity-title {
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--dark);
+            flex: 1;
+        }
+        
+        .timeline-activity-time {
+            background-color: rgba(255, 255, 255, 0.7);
+            color: var(--dark);
+            padding: 4px 10px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        
+        .timeline-activity-desc {
+            color: #555;
+            font-size: 0.95rem;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px dashed rgba(0, 0, 0, 0.1);
+        }
+        
+        .timeline-activity-author {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+        
+        .timeline-author-avatar {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.6rem;
+            font-weight: bold;
+            color: white;
+        }
+        
+        .timeline-author-avatar.felipe {
+            background-color: var(--felipe);
+        }
+        
+        .timeline-author-avatar.bruna {
+            background-color: var(--bruna);
+        }
+        
         footer {
             text-align: center;
             margin-top: 30px;
@@ -650,7 +896,15 @@
                 padding: 8px;
             }
             
-            .add-panel, .viewer-panel {
+            .tabs-header {
+                flex-direction: column;
+            }
+            
+            .tab-btn {
+                padding: 15px;
+            }
+            
+            .add-panel, .viewer-panel, .timeline-container {
                 padding: 15px;
             }
             
@@ -663,8 +917,17 @@
                 display: none;
             }
             
-            .day-selector {
+            .day-selector, .timeline-day-selector {
                 justify-content: center;
+            }
+            
+            .timeline-hour-row {
+                flex-direction: column;
+            }
+            
+            .timeline-hour-label {
+                width: 100%;
+                padding: 10px;
             }
             
             .activity-header {
@@ -675,6 +938,11 @@
             .activity-title {
                 min-width: unset;
                 width: 100%;
+            }
+            
+            .day-title {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
         
@@ -774,156 +1042,192 @@
             </div>
         </header>
         
-        <div class="main-container">
-            <!-- Painel para adicionar atividades -->
-            <section class="add-panel">
-                <h2><i class="fas fa-plus-circle"></i> Adicionar Atividade</h2>
-                <div class="realtime-notice">
-                    <i class="fas fa-sync-alt sync-indicator"></i>
-                    <span>Alterações são salvas e compartilhadas automaticamente</span>
-                </div>
-                
-                <form id="activity-form">
-                    <div class="form-group">
-                        <label for="day-select">Dia da viagem:</label>
-                        <select id="day-select" required>
-                            <option value="">Selecione o dia</option>
-                            <option value="18">18 de Junho (Dia 1 - Chegada)</option>
-                            <option value="19">19 de Junho (Dia 2)</option>
-                            <option value="20">20 de Junho (Dia 3)</option>
-                            <option value="21">21 de Junho (Dia 4 - Partida)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="start-time">Horário:</label>
-                        <div class="time-container">
-                            <div class="time-input">
-                                <select id="start-time" required>
-                                    <option value="">Início</option>
-                                    <option value="06:00">06:00</option>
-                                    <option value="07:00">07:00</option>
-                                    <option value="08:00">08:00</option>
-                                    <option value="09:00">09:00</option>
-                                    <option value="10:00">10:00</option>
-                                    <option value="11:00">11:00</option>
-                                    <option value="12:00">12:00</option>
-                                    <option value="13:00">13:00</option>
-                                    <option value="14:00">14:00</option>
-                                    <option value="15:00">15:00</option>
-                                    <option value="16:00">16:00</option>
-                                    <option value="17:00">17:00</option>
-                                    <option value="18:00">18:00</option>
-                                    <option value="19:00">19:00</option>
-                                    <option value="20:00">20:00</option>
-                                    <option value="21:00">21:00</option>
-                                    <option value="22:00">22:00</option>
-                                </select>
-                            </div>
-                            <div class="time-separator">até</div>
-                            <div class="time-input">
-                                <select id="end-time" required>
-                                    <option value="">Término</option>
-                                    <option value="07:00">07:00</option>
-                                    <option value="08:00">08:00</option>
-                                    <option value="09:00">09:00</option>
-                                    <option value="10:00">10:00</option>
-                                    <option value="11:00">11:00</option>
-                                    <option value="12:00">12:00</option>
-                                    <option value="13:00">13:00</option>
-                                    <option value="14:00">14:00</option>
-                                    <option value="15:00">15:00</option>
-                                    <option value="16:00">16:00</option>
-                                    <option value="17:00">17:00</option>
-                                    <option value="18:00">18:00</option>
-                                    <option value="19:00">19:00</option>
-                                    <option value="20:00">20:00</option>
-                                    <option value="21:00">21:00</option>
-                                    <option value="22:00">22:00</option>
-                                    <option value="23:00">23:00</option>
-                                </select>
-                            </div>
-                        </div>
-                        <div class="time-error" id="time-error">O horário de término deve ser depois do horário de início</div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="activity-title">Título da atividade:</label>
-                        <input type="text" id="activity-title" placeholder="Ex: Visitar o Lago Negro" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="activity-desc">Descrição (opcional):</label>
-                        <textarea id="activity-desc" placeholder="Detalhes, endereço, observações..."></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <div id="current-user-indicator">
-                            <small>Adicionando como: <strong id="current-user-name">Felipe Ruas</strong></small>
-                        </div>
-                    </div>
-                    
-                    <button type="submit" class="btn btn-add">
-                        <i class="fas fa-calendar-plus"></i> Adicionar à Agenda Compartilhada
-                    </button>
-                </form>
-            </section>
+        <!-- Sistema de Abas -->
+        <div class="tabs-container">
+            <div class="tabs-header">
+                <button class="tab-btn active" data-tab="add">
+                    <i class="fas fa-plus-circle"></i> Adicionar Atividade
+                </button>
+                <button class="tab-btn" data-tab="agenda">
+                    <i class="fas fa-calendar-alt"></i> Agenda Compartilhada
+                </button>
+                <button class="tab-btn" data-tab="timeline">
+                    <i class="fas fa-clock"></i> Visualização por Horário
+                </button>
+            </div>
             
-            <!-- Visualizador da agenda -->
-            <section class="viewer-panel">
-                <div class="viewer-header">
-                    <h2><i class="fas fa-calendar-alt"></i> Agenda Compartilhada</h2>
-                    <div class="day-selector">
-                        <button class="day-btn active" data-day="18">Dia 1</button>
-                        <button class="day-btn" data-day="19">Dia 2</button>
-                        <button class="day-btn" data-day="20">Dia 3</button>
-                        <button class="day-btn" data-day="21">Dia 4</button>
+            <!-- Aba: Adicionar Atividade -->
+            <div id="tab-add" class="tab-content active">
+                <section class="add-panel">
+                    <h2><i class="fas fa-plus-circle"></i> Adicionar Atividade</h2>
+                    <div class="realtime-notice">
+                        <i class="fas fa-sync-alt sync-indicator"></i>
+                        <span>Alterações são salvas e compartilhadas automaticamente</span>
                     </div>
-                </div>
-                
-                <div class="activities-container">
-                    <div id="day-18" class="day-activities">
-                        <h3 class="day-title">18 de Junho - Chegada a Gramado 
-                            <span class="day-counter">0 atividades</span>
-                            <span class="day-total-time">Total: 0h</span>
-                        </h3>
-                        <div class="no-activities">
-                            <p>Nenhuma atividade adicionada para este dia.</p>
-                            <p>Use o formulário ao lado para adicionar atividades.</p>
+                    
+                    <form id="activity-form">
+                        <div class="form-group">
+                            <label for="day-select">Dia da viagem:</label>
+                            <select id="day-select" required>
+                                <option value="">Selecione o dia</option>
+                                <option value="18">18 de Junho (Dia 1 - Chegada)</option>
+                                <option value="19">19 de Junho (Dia 2)</option>
+                                <option value="20">20 de Junho (Dia 3)</option>
+                                <option value="21">21 de Junho (Dia 4 - Partida)</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="start-time">Horário:</label>
+                            <div class="time-container">
+                                <div class="time-input">
+                                    <select id="start-time" required>
+                                        <option value="">Início</option>
+                                        <option value="06:00">06:00</option>
+                                        <option value="07:00">07:00</option>
+                                        <option value="08:00">08:00</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="20:00">20:00</option>
+                                        <option value="21:00">21:00</option>
+                                        <option value="22:00">22:00</option>
+                                    </select>
+                                </div>
+                                <div class="time-separator">até</div>
+                                <div class="time-input">
+                                    <select id="end-time" required>
+                                        <option value="">Término</option>
+                                        <option value="07:00">07:00</option>
+                                        <option value="08:00">08:00</option>
+                                        <option value="09:00">09:00</option>
+                                        <option value="10:00">10:00</option>
+                                        <option value="11:00">11:00</option>
+                                        <option value="12:00">12:00</option>
+                                        <option value="13:00">13:00</option>
+                                        <option value="14:00">14:00</option>
+                                        <option value="15:00">15:00</option>
+                                        <option value="16:00">16:00</option>
+                                        <option value="17:00">17:00</option>
+                                        <option value="18:00">18:00</option>
+                                        <option value="19:00">19:00</option>
+                                        <option value="20:00">20:00</option>
+                                        <option value="21:00">21:00</option>
+                                        <option value="22:00">22:00</option>
+                                        <option value="23:00">23:00</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="time-error" id="time-error">O horário de término deve ser depois do horário de início</div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="activity-title">Título da atividade:</label>
+                            <input type="text" id="activity-title" placeholder="Ex: Visitar o Lago Negro" required>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="activity-desc">Descrição (opcional):</label>
+                            <textarea id="activity-desc" placeholder="Detalhes, endereço, observações..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <div id="current-user-indicator">
+                                <small>Adicionando como: <strong id="current-user-name">Felipe Ruas</strong></small>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-add">
+                            <i class="fas fa-calendar-plus"></i> Adicionar à Agenda Compartilhada
+                        </button>
+                    </form>
+                </section>
+            </div>
+            
+            <!-- Aba: Agenda Compartilhada -->
+            <div id="tab-agenda" class="tab-content">
+                <section class="viewer-panel">
+                    <div class="viewer-header">
+                        <h2><i class="fas fa-calendar-alt"></i> Agenda Compartilhada</h2>
+                        <div class="day-selector">
+                            <button class="day-btn active" data-day="18">Dia 1</button>
+                            <button class="day-btn" data-day="19">Dia 2</button>
+                            <button class="day-btn" data-day="20">Dia 3</button>
+                            <button class="day-btn" data-day="21">Dia 4</button>
                         </div>
                     </div>
                     
-                    <div id="day-19" class="day-activities" style="display: none;">
-                        <h3 class="day-title">19 de Junho - Segundo dia
-                            <span class="day-counter">0 atividades</span>
-                            <span class="day-total-time">Total: 0h</span>
-                        </h3>
-                        <div class="no-activities">
-                            <p>Nenhuma atividade adicionada para este dia.</p>
+                    <div class="activities-container">
+                        <div id="day-18" class="day-activities">
+                            <h3 class="day-title">18 de Junho - Chegada a Gramado 
+                                <span class="day-counter">0 atividades</span>
+                                <span class="day-total-time">Total: 0h</span>
+                            </h3>
+                            <div class="no-activities">
+                                <p>Nenhuma atividade adicionada para este dia.</p>
+                                <p>Use o formulário ao lado para adicionar atividades.</p>
+                            </div>
+                        </div>
+                        
+                        <div id="day-19" class="day-activities" style="display: none;">
+                            <h3 class="day-title">19 de Junho - Segundo dia
+                                <span class="day-counter">0 atividades</span>
+                                <span class="day-total-time">Total: 0h</span>
+                            </h3>
+                            <div class="no-activities">
+                                <p>Nenhuma atividade adicionada para este dia.</p>
+                            </div>
+                        </div>
+                        
+                        <div id="day-20" class="day-activities" style="display: none;">
+                            <h3 class="day-title">20 de Junho - Terceiro dia
+                                <span class="day-counter">0 atividades</span>
+                                <span class="day-total-time">Total: 0h</span>
+                            </h3>
+                            <div class="no-activities">
+                                <p>Nenhuma atividade adicionada para este dia.</p>
+                            </div>
+                        </div>
+                        
+                        <div id="day-21" class="day-activities" style="display: none;">
+                            <h3 class="day-title">21 de Junho - Partida de Gramado
+                                <span class="day-counter">0 atividades</span>
+                                <span class="day-total-time">Total: 0h</span>
+                            </h3>
+                            <div class="no-activities">
+                                <p>Nenhuma atividade adicionada para este dia.</p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- Aba: Visualização por Horário (NOVA) -->
+            <div id="tab-timeline" class="tab-content">
+                <section class="timeline-container">
+                    <div class="timeline-header">
+                        <h2><i class="fas fa-clock"></i> Visualização por Horário</h2>
+                        <div class="timeline-day-selector">
+                            <button class="timeline-day-btn active" data-day="18">Dia 1 - 18/06</button>
+                            <button class="timeline-day-btn" data-day="19">Dia 2 - 19/06</button>
+                            <button class="timeline-day-btn" data-day="20">Dia 3 - 20/06</button>
+                            <button class="timeline-day-btn" data-day="21">Dia 4 - 21/06</button>
                         </div>
                     </div>
                     
-                    <div id="day-20" class="day-activities" style="display: none;">
-                        <h3 class="day-title">20 de Junho - Terceiro dia
-                            <span class="day-counter">0 atividades</span>
-                            <span class="day-total-time">Total: 0h</span>
-                        </h3>
-                        <div class="no-activities">
-                            <p>Nenhuma atividade adicionada para este dia.</p>
-                        </div>
+                    <div class="timeline-grid" id="timeline-grid">
+                        <!-- As atividades por horário serão carregadas aqui dinamicamente -->
                     </div>
-                    
-                    <div id="day-21" class="day-activities" style="display: none;">
-                        <h3 class="day-title">21 de Junho - Partida de Gramado
-                            <span class="day-counter">0 atividades</span>
-                            <span class="day-total-time">Total: 0h</span>
-                        </h3>
-                        <div class="no-activities">
-                            <p>Nenhuma atividade adicionada para este dia.</p>
-                        </div>
-                    </div>
-                </div>
-            </section>
+                </section>
+            </div>
         </div>
         
         <footer>
@@ -963,6 +1267,14 @@
         let travelActivities = {
             "18": [], "19": [], "20": [], "21": []
         };
+        
+        // Horários para visualização por horário
+        const timelineHours = [
+            "06:00", "07:00", "08:00", "09:00", "10:00", 
+            "11:00", "12:00", "13:00", "14:00", "15:00", 
+            "16:00", "17:00", "18:00", "19:00", "20:00", 
+            "21:00", "22:00"
+        ];
         
         // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
@@ -1088,7 +1400,27 @@
             document.getElementById('start-time').addEventListener('change', validateTimeRange);
             document.getElementById('end-time').addEventListener('change', validateTimeRange);
             
-            // Configurar botões de seleção de dia
+            // Configurar sistema de abas
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Ativar botão clicado
+                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Mostrar conteúdo da aba selecionada
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+                    document.getElementById(`tab-${tabId}`).classList.add('active');
+                    
+                    // Se for a aba de timeline, renderizar
+                    if (tabId === 'timeline') {
+                        renderTimeline();
+                    }
+                });
+            });
+            
+            // Configurar botões de seleção de dia na agenda
             document.querySelectorAll('.day-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
                     const day = this.getAttribute('data-day');
@@ -1099,6 +1431,20 @@
                     
                     // Mostrar atividades do dia selecionado
                     showDayActivities(day);
+                });
+            });
+            
+            // Configurar botões de seleção de dia na timeline
+            document.querySelectorAll('.timeline-day-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const day = this.getAttribute('data-day');
+                    
+                    // Ativar botão clicado
+                    document.querySelectorAll('.timeline-day-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Renderizar timeline do dia selecionado
+                    renderTimeline(day);
                 });
             });
         }
@@ -1221,7 +1567,8 @@
                                 desc: activity.description,
                                 duration: activity.duration,
                                 createdBy: activity.created_by,
-                                authorName: users[activity.created_by] ? users[activity.created_by].fullName : activity.created_by
+                                authorName: users[activity.created_by] ? users[activity.created_by].fullName : activity.created_by,
+                                startHour: parseInt(activity.start_time.split(':')[0])
                             });
                         }
                     });
@@ -1230,6 +1577,11 @@
                 renderAllActivities();
                 const activeDay = document.querySelector('.day-btn.active')?.getAttribute('data-day') || '18';
                 showDayActivities(activeDay);
+                
+                // Renderizar timeline se estiver ativa
+                if (document.querySelector('.tab-btn[data-tab="timeline"]').classList.contains('active')) {
+                    renderTimeline(activeDay);
+                }
                 
                 updateConnectionStatus("Conectado • Atualizações em tempo real", true);
                 
@@ -1251,6 +1603,11 @@
                         renderAllActivities();
                         const activeDay = document.querySelector('.day-btn.active')?.getAttribute('data-day') || '18';
                         showDayActivities(activeDay);
+                        
+                        // Renderizar timeline se estiver ativa
+                        if (document.querySelector('.tab-btn[data-tab="timeline"]').classList.contains('active')) {
+                            renderTimeline(activeDay);
+                        }
                     }
                 }
             } catch (error) {
@@ -1384,7 +1741,8 @@
                 desc: desc,
                 duration: duration,
                 createdBy: currentUser.username,
-                authorName: currentUser.fullName
+                authorName: currentUser.fullName,
+                startHour: parseInt(startTime.split(':')[0])
             });
             
             travelActivities[day].sort((a, b) => a.startTime.localeCompare(b.startTime));
@@ -1393,6 +1751,11 @@
             
             const activeDay = document.querySelector('.day-btn.active')?.getAttribute('data-day');
             if (day === activeDay) showDayActivities(activeDay);
+            
+            // Renderizar timeline se estiver ativa
+            if (document.querySelector('.tab-btn[data-tab="timeline"]').classList.contains('active')) {
+                renderTimeline(day);
+            }
         }
         
         // Remover atividade
@@ -1419,6 +1782,11 @@
             travelActivities[day] = travelActivities[day].filter(activity => activity.id !== activityId);
             saveToLocalStorage();
             renderDayActivities(day);
+            
+            // Renderizar timeline se estiver ativa
+            if (document.querySelector('.tab-btn[data-tab="timeline"]').classList.contains('active')) {
+                renderTimeline(day);
+            }
         }
         
         // Salvar no localStorage (fallback)
@@ -1509,6 +1877,92 @@
             
             const dayElement = document.getElementById(`day-${day}`);
             if (dayElement) dayElement.style.display = 'block';
+        }
+        
+        // Renderizar timeline por horário (NOVA FUNÇÃO)
+        function renderTimeline(day = null) {
+            if (!day) {
+                day = document.querySelector('.timeline-day-btn.active')?.getAttribute('data-day') || '18';
+            }
+            
+            const timelineGrid = document.getElementById('timeline-grid');
+            if (!timelineGrid) return;
+            
+            timelineGrid.innerHTML = '';
+            
+            const activitiesList = travelActivities[day] || [];
+            const dayNames = {
+                '18': '18 de Junho - Chegada a Gramado',
+                '19': '19 de Junho - Segundo dia',
+                '20': '20 de Junho - Terceiro dia',
+                '21': '21 de Junho - Partida de Gramado'
+            };
+            
+            // Criar linha para cada horário
+            timelineHours.forEach(hour => {
+                const hourRow = document.createElement('div');
+                hourRow.className = 'timeline-hour-row';
+                
+                // Label do horário
+                const hourLabel = document.createElement('div');
+                hourLabel.className = 'timeline-hour-label';
+                hourLabel.textContent = hour;
+                hourRow.appendChild(hourLabel);
+                
+                // Conteúdo do horário
+                const hourContent = document.createElement('div');
+                hourContent.className = 'timeline-hour-content';
+                
+                // Verificar se há atividade neste horário
+                const activityInHour = activitiesList.find(activity => {
+                    const activityStartHour = parseInt(activity.startTime.split(':')[0]);
+                    return activityStartHour === parseInt(hour.split(':')[0]);
+                });
+                
+                if (activityInHour) {
+                    const userColor = users[activityInHour.createdBy] ? users[activityInHour.createdBy].color : 'felipe';
+                    const activityElement = document.createElement('div');
+                    activityElement.className = `timeline-activity ${userColor}`;
+                    activityElement.innerHTML = `
+                        <div class="timeline-activity-header">
+                            <div class="timeline-activity-title">${activityInHour.title}</div>
+                            <div class="timeline-activity-time">
+                                <i class="far fa-clock"></i> ${activityInHour.startTime} - ${activityInHour.endTime}
+                            </div>
+                        </div>
+                        ${activityInHour.desc ? `<div class="timeline-activity-desc">${activityInHour.desc}</div>` : ''}
+                        <div class="timeline-activity-author">
+                            <div class="timeline-author-avatar ${userColor}">${activityInHour.createdBy === 'felipe.ruas' ? 'F' : 'B'}</div>
+                            <div>${activityInHour.authorName || activityInHour.createdBy}</div>
+                        </div>
+                    `;
+                    hourContent.appendChild(activityElement);
+                } else {
+                    hourContent.classList.add('empty');
+                    hourContent.textContent = 'Nenhuma atividade alocada neste horário';
+                }
+                
+                hourRow.appendChild(hourContent);
+                timelineGrid.appendChild(hourRow);
+            });
+            
+            // Adicionar informação sobre o dia
+            const dayInfo = document.createElement('div');
+            dayInfo.style.cssText = `
+                margin-top: 20px;
+                padding: 15px;
+                background-color: #f0f7ff;
+                border-radius: 8px;
+                font-size: 0.95rem;
+                color: #666;
+                text-align: center;
+            `;
+            dayInfo.innerHTML = `
+                <strong>${dayNames[day]}</strong> - 
+                ${activitiesList.length} atividade${activitiesList.length !== 1 ? 's' : ''} • 
+                Total: ${formatDuration(calculateDayTotal(day))}
+            `;
+            timelineGrid.appendChild(dayInfo);
         }
     </script>
 </body>
