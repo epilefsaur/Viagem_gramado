@@ -17,6 +17,7 @@
             --warning: #ff9800;
             --felipe: #3a6ea5;
             --bruna: #e91e63;
+            --money: #4caf50;
         }
         
         * {
@@ -425,6 +426,42 @@
             min-height: 100px;
         }
         
+        .money-input {
+            position: relative;
+        }
+        
+        .money-input::before {
+            content: 'R$';
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #666;
+            font-weight: 500;
+        }
+        
+        .money-input input {
+            padding-left: 40px;
+        }
+        
+        .address-input {
+            position: relative;
+        }
+        
+        .address-input input {
+            padding-right: 40px;
+        }
+        
+        .maps-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary);
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
         .btn {
             background-color: var(--primary);
             color: white;
@@ -434,7 +471,6 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
-            width: 100%;
             transition: background-color 0.3s;
             display: flex;
             justify-content: center;
@@ -448,10 +484,20 @@
         
         .btn-add {
             background-color: var(--success);
+            width: 100%;
         }
         
         .btn-add:hover {
             background-color: #3d8b40;
+        }
+        
+        .btn-edit {
+            background-color: var(--warning);
+            color: white;
+        }
+        
+        .btn-edit:hover {
+            background-color: #e68900;
         }
         
         /* Visualizador de Agenda (Aba Agenda) */
@@ -538,6 +584,17 @@
             border-radius: 20px;
         }
         
+        .day-total-cost {
+            font-size: 0.9rem;
+            color: #666;
+            font-weight: normal;
+            background-color: #e8f5e9;
+            padding: 5px 12px;
+            border-radius: 20px;
+            color: var(--money);
+            font-weight: 600;
+        }
+        
         .no-activities {
             text-align: center;
             padding: 40px 20px;
@@ -596,6 +653,19 @@
             gap: 3px;
         }
         
+        .activity-cost {
+            background-color: #e8f5e9;
+            color: var(--money);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 600;
+        }
+        
         .activity-title {
             font-weight: 700;
             font-size: 1.2rem;
@@ -609,6 +679,37 @@
             margin-top: 8px;
             padding-top: 8px;
             border-top: 1px dashed #ddd;
+        }
+        
+        .activity-address {
+            color: #666;
+            margin-top: 8px;
+            padding: 8px;
+            background-color: #f0f7ff;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .activity-address:hover {
+            background-color: #e1ecf7;
+        }
+        
+        .address-text {
+            flex: 1;
+        }
+        
+        .maps-link {
+            color: var(--primary);
+            font-size: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 10px;
         }
         
         .activity-author {
@@ -822,12 +923,56 @@
             gap: 5px;
         }
         
+        .timeline-activity-cost {
+            background-color: rgba(76, 175, 80, 0.2);
+            color: var(--money);
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 5px;
+            display: inline-flex;
+            align-items: center;
+            gap: 3px;
+            font-weight: 600;
+        }
+        
         .timeline-activity-desc {
             color: #555;
             font-size: 0.95rem;
             margin-top: 8px;
             padding-top: 8px;
             border-top: 1px dashed rgba(0, 0, 0, 0.1);
+        }
+        
+        .timeline-activity-address {
+            color: #666;
+            margin-top: 8px;
+            padding: 8px;
+            background-color: rgba(58, 110, 165, 0.1);
+            border-radius: 6px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        
+        .timeline-activity-address:hover {
+            background-color: rgba(58, 110, 165, 0.2);
+        }
+        
+        .timeline-address-text {
+            flex: 1;
+        }
+        
+        .timeline-maps-link {
+            color: var(--primary);
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            margin-left: 10px;
         }
         
         .timeline-activity-author {
@@ -857,6 +1002,71 @@
         
         .timeline-author-avatar.bruna {
             background-color: var(--bruna);
+        }
+        
+        /* Modal de Edição */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            animation: slideIn 0.3s ease;
+        }
+        
+        @keyframes slideIn {
+            from { transform: translateY(-30px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        
+        .modal h3 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--secondary);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .modal-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 25px;
+            justify-content: flex-end;
+        }
+        
+        .btn-cancel {
+            background-color: #95a5a6;
+            color: white;
+        }
+        
+        .btn-cancel:hover {
+            background-color: #7f8c8d;
+        }
+        
+        .btn-save {
+            background-color: var(--success);
+            color: white;
+        }
+        
+        .btn-save:hover {
+            background-color: #3d8b40;
         }
         
         footer {
@@ -904,7 +1114,7 @@
                 padding: 15px;
             }
             
-            .add-panel, .viewer-panel, .timeline-container {
+            .add-panel, .viewer-panel, .timeline-container, .modal-content {
                 padding: 15px;
             }
             
@@ -930,12 +1140,12 @@
                 padding: 10px;
             }
             
-            .activity-header {
+            .activity-header, .timeline-activity-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
             
-            .activity-title {
+            .activity-title, .timeline-activity-title {
                 min-width: unset;
                 width: 100%;
             }
@@ -943,6 +1153,14 @@
             .day-title {
                 flex-direction: column;
                 align-items: flex-start;
+            }
+            
+            .modal-buttons {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
             }
         }
         
@@ -967,6 +1185,24 @@
             0% { opacity: 0.6; }
             50% { opacity: 1; }
             100% { opacity: 0.6; }
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+            margin-bottom: 0;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                flex-direction: column;
+                gap: 20px;
+            }
         }
     </style>
 </head>
@@ -1077,57 +1313,57 @@
                             </select>
                         </div>
                         
-                        <div class="form-group">
-                            <label for="start-time">Horário:</label>
-                            <div class="time-container">
-                                <div class="time-input">
-                                    <select id="start-time" required>
-                                        <option value="">Início</option>
-                                        <option value="06:00">06:00</option>
-                                        <option value="07:00">07:00</option>
-                                        <option value="08:00">08:00</option>
-                                        <option value="09:00">09:00</option>
-                                        <option value="10:00">10:00</option>
-                                        <option value="11:00">11:00</option>
-                                        <option value="12:00">12:00</option>
-                                        <option value="13:00">13:00</option>
-                                        <option value="14:00">14:00</option>
-                                        <option value="15:00">15:00</option>
-                                        <option value="16:00">16:00</option>
-                                        <option value="17:00">17:00</option>
-                                        <option value="18:00">18:00</option>
-                                        <option value="19:00">19:00</option>
-                                        <option value="20:00">20:00</option>
-                                        <option value="21:00">21:00</option>
-                                        <option value="22:00">22:00</option>
-                                    </select>
-                                </div>
-                                <div class="time-separator">até</div>
-                                <div class="time-input">
-                                    <select id="end-time" required>
-                                        <option value="">Término</option>
-                                        <option value="07:00">07:00</option>
-                                        <option value="08:00">08:00</option>
-                                        <option value="09:00">09:00</option>
-                                        <option value="10:00">10:00</option>
-                                        <option value="11:00">11:00</option>
-                                        <option value="12:00">12:00</option>
-                                        <option value="13:00">13:00</option>
-                                        <option value="14:00">14:00</option>
-                                        <option value="15:00">15:00</option>
-                                        <option value="16:00">16:00</option>
-                                        <option value="17:00">17:00</option>
-                                        <option value="18:00">18:00</option>
-                                        <option value="19:00">19:00</option>
-                                        <option value="20:00">20:00</option>
-                                        <option value="21:00">21:00</option>
-                                        <option value="22:00">22:00</option>
-                                        <option value="23:00">23:00</option>
-                                    </select>
-                                </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="start-time">Horário início:</label>
+                                <select id="start-time" required>
+                                    <option value="">Selecione</option>
+                                    <option value="06:00">06:00</option>
+                                    <option value="07:00">07:00</option>
+                                    <option value="08:00">08:00</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="10:00">10:00</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="12:00">12:00</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="14:00">14:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="16:00">16:00</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="18:00">18:00</option>
+                                    <option value="19:00">19:00</option>
+                                    <option value="20:00">20:00</option>
+                                    <option value="21:00">21:00</option>
+                                    <option value="22:00">22:00</option>
+                                </select>
                             </div>
-                            <div class="time-error" id="time-error">O horário de término deve ser depois do horário de início</div>
+                            
+                            <div class="form-group">
+                                <label for="end-time">Horário término:</label>
+                                <select id="end-time" required>
+                                    <option value="">Selecione</option>
+                                    <option value="07:00">07:00</option>
+                                    <option value="08:00">08:00</option>
+                                    <option value="09:00">09:00</option>
+                                    <option value="10:00">10:00</option>
+                                    <option value="11:00">11:00</option>
+                                    <option value="12:00">12:00</option>
+                                    <option value="13:00">13:00</option>
+                                    <option value="14:00">14:00</option>
+                                    <option value="15:00">15:00</option>
+                                    <option value="16:00">16:00</option>
+                                    <option value="17:00">17:00</option>
+                                    <option value="18:00">18:00</option>
+                                    <option value="19:00">19:00</option>
+                                    <option value="20:00">20:00</option>
+                                    <option value="21:00">21:00</option>
+                                    <option value="22:00">22:00</option>
+                                    <option value="23:00">23:00</option>
+                                </select>
+                            </div>
                         </div>
+                        
+                        <div class="time-error" id="time-error">O horário de término deve ser depois do horário de início</div>
                         
                         <div class="form-group">
                             <label for="activity-title">Título da atividade:</label>
@@ -1136,7 +1372,22 @@
                         
                         <div class="form-group">
                             <label for="activity-desc">Descrição (opcional):</label>
-                            <textarea id="activity-desc" placeholder="Detalhes, endereço, observações..."></textarea>
+                            <textarea id="activity-desc" placeholder="Detalhes, observações..."></textarea>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group money-input">
+                                <label for="activity-cost">Valor estimado (R$):</label>
+                                <input type="number" id="activity-cost" placeholder="0,00" step="0.01" min="0">
+                            </div>
+                            
+                            <div class="form-group address-input">
+                                <label for="activity-address">Endereço (opcional):</label>
+                                <input type="text" id="activity-address" placeholder="Ex: Rua das Flores, 123, Gramado">
+                                <div class="maps-icon" id="preview-address" title="Visualizar no Google Maps">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                </div>
+                            </div>
                         </div>
                         
                         <div class="form-group">
@@ -1145,7 +1396,7 @@
                             </div>
                         </div>
                         
-                        <button type="submit" class="btn btn-add">
+                        <button type="submit" class="btn btn-add" id="submit-activity-btn">
                             <i class="fas fa-calendar-plus"></i> Adicionar à Agenda Compartilhada
                         </button>
                     </form>
@@ -1170,6 +1421,7 @@
                             <h3 class="day-title">18 de Junho - Chegada a Gramado 
                                 <span class="day-counter">0 atividades</span>
                                 <span class="day-total-time">Total: 0h</span>
+                                <span class="day-total-cost" id="day-18-cost">R$ 0,00</span>
                             </h3>
                             <div class="no-activities">
                                 <p>Nenhuma atividade adicionada para este dia.</p>
@@ -1181,6 +1433,7 @@
                             <h3 class="day-title">19 de Junho - Segundo dia
                                 <span class="day-counter">0 atividades</span>
                                 <span class="day-total-time">Total: 0h</span>
+                                <span class="day-total-cost" id="day-19-cost">R$ 0,00</span>
                             </h3>
                             <div class="no-activities">
                                 <p>Nenhuma atividade adicionada para este dia.</p>
@@ -1191,6 +1444,7 @@
                             <h3 class="day-title">20 de Junho - Terceiro dia
                                 <span class="day-counter">0 atividades</span>
                                 <span class="day-total-time">Total: 0h</span>
+                                <span class="day-total-cost" id="day-20-cost">R$ 0,00</span>
                             </h3>
                             <div class="no-activities">
                                 <p>Nenhuma atividade adicionada para este dia.</p>
@@ -1201,6 +1455,7 @@
                             <h3 class="day-title">21 de Junho - Partida de Gramado
                                 <span class="day-counter">0 atividades</span>
                                 <span class="day-total-time">Total: 0h</span>
+                                <span class="day-total-cost" id="day-21-cost">R$ 0,00</span>
                             </h3>
                             <div class="no-activities">
                                 <p>Nenhuma atividade adicionada para este dia.</p>
@@ -1210,7 +1465,7 @@
                 </section>
             </div>
             
-            <!-- Aba: Visualização por Horário (NOVA) -->
+            <!-- Aba: Visualização por Horário -->
             <div id="tab-timeline" class="tab-content">
                 <section class="timeline-container">
                     <div class="timeline-header">
@@ -1227,6 +1482,109 @@
                         <!-- As atividades por horário serão carregadas aqui dinamicamente -->
                     </div>
                 </section>
+            </div>
+        </div>
+        
+        <!-- Modal de Edição -->
+        <div class="modal" id="edit-modal">
+            <div class="modal-content">
+                <h3><i class="fas fa-edit"></i> Editar Atividade</h3>
+                <form id="edit-form">
+                    <input type="hidden" id="edit-id">
+                    <input type="hidden" id="edit-day">
+                    
+                    <div class="form-group">
+                        <label for="edit-day-select">Dia da viagem:</label>
+                        <select id="edit-day-select" required>
+                            <option value="18">18 de Junho (Dia 1 - Chegada)</option>
+                            <option value="19">19 de Junho (Dia 2)</option>
+                            <option value="20">20 de Junho (Dia 3)</option>
+                            <option value="21">21 de Junho (Dia 4 - Partida)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="edit-start-time">Horário início:</label>
+                            <select id="edit-start-time" required>
+                                <option value="06:00">06:00</option>
+                                <option value="07:00">07:00</option>
+                                <option value="08:00">08:00</option>
+                                <option value="09:00">09:00</option>
+                                <option value="10:00">10:00</option>
+                                <option value="11:00">11:00</option>
+                                <option value="12:00">12:00</option>
+                                <option value="13:00">13:00</option>
+                                <option value="14:00">14:00</option>
+                                <option value="15:00">15:00</option>
+                                <option value="16:00">16:00</option>
+                                <option value="17:00">17:00</option>
+                                <option value="18:00">18:00</option>
+                                <option value="19:00">19:00</option>
+                                <option value="20:00">20:00</option>
+                                <option value="21:00">21:00</option>
+                                <option value="22:00">22:00</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="edit-end-time">Horário término:</label>
+                            <select id="edit-end-time" required>
+                                <option value="07:00">07:00</option>
+                                <option value="08:00">08:00</option>
+                                <option value="09:00">09:00</option>
+                                <option value="10:00">10:00</option>
+                                <option value="11:00">11:00</option>
+                                <option value="12:00">12:00</option>
+                                <option value="13:00">13:00</option>
+                                <option value="14:00">14:00</option>
+                                <option value="15:00">15:00</option>
+                                <option value="16:00">16:00</option>
+                                <option value="17:00">17:00</option>
+                                <option value="18:00">18:00</option>
+                                <option value="19:00">19:00</option>
+                                <option value="20:00">20:00</option>
+                                <option value="21:00">21:00</option>
+                                <option value="22:00">22:00</option>
+                                <option value="23:00">23:00</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-title">Título da atividade:</label>
+                        <input type="text" id="edit-title" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="edit-desc">Descrição (opcional):</label>
+                        <textarea id="edit-desc"></textarea>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group money-input">
+                            <label for="edit-cost">Valor estimado (R$):</label>
+                            <input type="number" id="edit-cost" step="0.01" min="0">
+                        </div>
+                        
+                        <div class="form-group address-input">
+                            <label for="edit-address">Endereço (opcional):</label>
+                            <input type="text" id="edit-address" placeholder="Ex: Rua das Flores, 123, Gramado">
+                            <div class="maps-icon" id="edit-preview-address" title="Visualizar no Google Maps">
+                                <i class="fas fa-map-marker-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="modal-buttons">
+                        <button type="button" class="btn btn-cancel" id="cancel-edit">
+                            <i class="fas fa-times"></i> Cancelar
+                        </button>
+                        <button type="submit" class="btn btn-save">
+                            <i class="fas fa-save"></i> Salvar Alterações
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
         
@@ -1267,6 +1625,7 @@
         let travelActivities = {
             "18": [], "19": [], "20": [], "21": []
         };
+        let editingActivity = null;
         
         // Horários para visualização por horário
         const timelineHours = [
@@ -1400,6 +1759,26 @@
             document.getElementById('start-time').addEventListener('change', validateTimeRange);
             document.getElementById('end-time').addEventListener('change', validateTimeRange);
             
+            // Preview de endereço no formulário de adição
+            document.getElementById('preview-address').addEventListener('click', function() {
+                const address = document.getElementById('activity-address').value.trim();
+                if (address) {
+                    openGoogleMaps(address);
+                } else {
+                    alert('Digite um endereço para visualizar no Google Maps');
+                }
+            });
+            
+            // Preview de endereço no modal de edição
+            document.getElementById('edit-preview-address').addEventListener('click', function() {
+                const address = document.getElementById('edit-address').value.trim();
+                if (address) {
+                    openGoogleMaps(address);
+                } else {
+                    alert('Digite um endereço para visualizar no Google Maps');
+                }
+            });
+            
             // Configurar sistema de abas
             document.querySelectorAll('.tab-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -1446,6 +1825,16 @@
                     // Renderizar timeline do dia selecionado
                     renderTimeline(day);
                 });
+            });
+            
+            // Configurar modal de edição
+            document.getElementById('cancel-edit').addEventListener('click', function() {
+                closeEditModal();
+            });
+            
+            document.getElementById('edit-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                saveEditedActivity();
             });
         }
         
@@ -1565,6 +1954,8 @@
                                 endTime: activity.end_time,
                                 title: activity.title,
                                 desc: activity.description,
+                                cost: activity.cost || 0,
+                                address: activity.address || '',
                                 duration: activity.duration,
                                 createdBy: activity.created_by,
                                 authorName: users[activity.created_by] ? users[activity.created_by].fullName : activity.created_by,
@@ -1575,6 +1966,7 @@
                 }
                 
                 renderAllActivities();
+                updateDayTotals();
                 const activeDay = document.querySelector('.day-btn.active')?.getAttribute('data-day') || '18';
                 showDayActivities(activeDay);
                 
@@ -1601,6 +1993,7 @@
                     if (parsedData && typeof parsedData === 'object') {
                         travelActivities = parsedData;
                         renderAllActivities();
+                        updateDayTotals();
                         const activeDay = document.querySelector('.day-btn.active')?.getAttribute('data-day') || '18';
                         showDayActivities(activeDay);
                         
@@ -1659,10 +2052,42 @@
             return `${hours}h${minutes}min`;
         }
         
+        // Formatar valor em reais
+        function formatCurrency(value) {
+            if (!value) value = 0;
+            return new Intl.NumberFormat('pt-BR', {
+                style: 'currency',
+                currency: 'BRL'
+            }).format(value);
+        }
+        
         // Calcular tempo total de atividades do dia
         function calculateDayTotal(day) {
             const activities = travelActivities[day] || [];
             return activities.reduce((total, activity) => total + activity.duration, 0);
+        }
+        
+        // Calcular custo total do dia
+        function calculateDayCost(day) {
+            const activities = travelActivities[day] || [];
+            return activities.reduce((total, activity) => total + (activity.cost || 0), 0);
+        }
+        
+        // Atualizar totais dos dias
+        function updateDayTotals() {
+            ['18', '19', '20', '21'].forEach(day => {
+                const totalCost = calculateDayCost(day);
+                const costElement = document.getElementById(`day-${day}-cost`);
+                if (costElement) {
+                    costElement.textContent = formatCurrency(totalCost);
+                }
+            });
+        }
+        
+        // Abrir Google Maps com endereço
+        function openGoogleMaps(address) {
+            const encodedAddress = encodeURIComponent(address);
+            window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
         }
         
         // Adicionar atividade ao Supabase
@@ -1677,6 +2102,8 @@
             const endTime = document.getElementById('end-time').value;
             const title = document.getElementById('activity-title').value.trim();
             const desc = document.getElementById('activity-desc').value.trim();
+            const cost = parseFloat(document.getElementById('activity-cost').value) || 0;
+            const address = document.getElementById('activity-address').value.trim();
             
             if (!day || !startTime || !endTime || !title) {
                 alert('Por favor, preencha todos os campos obrigatórios.');
@@ -1704,6 +2131,8 @@
                                 end_time: endTime,
                                 title: title,
                                 description: desc,
+                                cost: cost,
+                                address: address,
                                 duration: duration,
                                 created_by: currentUser.username
                             }
@@ -1716,7 +2145,7 @@
                 }
                 
                 // Fallback: salvar localmente
-                saveActivityLocally(day, startTime, endTime, title, desc, duration);
+                saveActivityLocally(day, startTime, endTime, title, desc, cost, address, duration);
                 
                 // Limpar formulário
                 document.getElementById('activity-form').reset();
@@ -1725,20 +2154,23 @@
                 
             } catch (error) {
                 console.error('Erro ao salvar atividade:', error);
-                saveActivityLocally(day, startTime, endTime, title, desc, duration);
+                saveActivityLocally(day, startTime, endTime, title, desc, cost, address, duration);
             }
         }
         
         // Salvar atividade localmente (fallback)
-        function saveActivityLocally(day, startTime, endTime, title, desc, duration) {
+        function saveActivityLocally(day, startTime, endTime, title, desc, cost, address, duration) {
             if (!travelActivities[day]) travelActivities[day] = [];
             
+            const activityId = Date.now();
             travelActivities[day].push({
-                id: Date.now(),
+                id: activityId,
                 startTime: startTime,
                 endTime: endTime,
                 title: title,
                 desc: desc,
+                cost: cost,
+                address: address,
                 duration: duration,
                 createdBy: currentUser.username,
                 authorName: currentUser.fullName,
@@ -1748,6 +2180,7 @@
             travelActivities[day].sort((a, b) => a.startTime.localeCompare(b.startTime));
             saveToLocalStorage();
             renderDayActivities(day);
+            updateDayTotals();
             
             const activeDay = document.querySelector('.day-btn.active')?.getAttribute('data-day');
             if (day === activeDay) showDayActivities(activeDay);
@@ -1755,6 +2188,133 @@
             // Renderizar timeline se estiver ativa
             if (document.querySelector('.tab-btn[data-tab="timeline"]').classList.contains('active')) {
                 renderTimeline(day);
+            }
+        }
+        
+        // Abrir modal de edição
+        function openEditModal(activityId, day) {
+            const activity = travelActivities[day].find(a => a.id === activityId);
+            if (!activity) return;
+            
+            editingActivity = { id: activityId, day: day };
+            
+            // Preencher formulário de edição
+            document.getElementById('edit-id').value = activityId;
+            document.getElementById('edit-day').value = day;
+            document.getElementById('edit-day-select').value = day;
+            document.getElementById('edit-start-time').value = activity.startTime;
+            document.getElementById('edit-end-time').value = activity.endTime;
+            document.getElementById('edit-title').value = activity.title;
+            document.getElementById('edit-desc').value = activity.desc || '';
+            document.getElementById('edit-cost').value = activity.cost || 0;
+            document.getElementById('edit-address').value = activity.address || '';
+            
+            // Mostrar modal
+            document.getElementById('edit-modal').style.display = 'flex';
+        }
+        
+        // Fechar modal de edição
+        function closeEditModal() {
+            document.getElementById('edit-modal').style.display = 'none';
+            editingActivity = null;
+            document.getElementById('edit-form').reset();
+        }
+        
+        // Salvar atividade editada
+        async function saveEditedActivity() {
+            const activityId = parseInt(document.getElementById('edit-id').value);
+            const oldDay = document.getElementById('edit-day').value;
+            const newDay = document.getElementById('edit-day-select').value;
+            const startTime = document.getElementById('edit-start-time').value;
+            const endTime = document.getElementById('edit-end-time').value;
+            const title = document.getElementById('edit-title').value.trim();
+            const desc = document.getElementById('edit-desc').value.trim();
+            const cost = parseFloat(document.getElementById('edit-cost').value) || 0;
+            const address = document.getElementById('edit-address').value.trim();
+            
+            if (!title) {
+                alert('O título da atividade é obrigatório.');
+                return;
+            }
+            
+            const duration = calculateDuration(startTime, endTime);
+            
+            try {
+                if (supabase) {
+                    // Atualizar no Supabase
+                    const { error } = await supabase
+                        .from('travel_activities')
+                        .update({
+                            day_number: parseInt(newDay),
+                            start_time: startTime,
+                            end_time: endTime,
+                            title: title,
+                            description: desc,
+                            cost: cost,
+                            address: address,
+                            duration: duration
+                        })
+                        .eq('id', activityId);
+                    
+                    if (error) throw error;
+                }
+                
+                // Atualizar localmente
+                updateActivityLocally(activityId, oldDay, newDay, startTime, endTime, title, desc, cost, address, duration);
+                
+                closeEditModal();
+                updateConnectionStatus("Atividade atualizada! • Conectado", true);
+                
+            } catch (error) {
+                console.error('Erro ao atualizar atividade:', error);
+                updateActivityLocally(activityId, oldDay, newDay, startTime, endTime, title, desc, cost, address, duration);
+                closeEditModal();
+            }
+        }
+        
+        // Atualizar atividade localmente
+        function updateActivityLocally(activityId, oldDay, newDay, startTime, endTime, title, desc, cost, address, duration) {
+            // Remover da lista antiga
+            travelActivities[oldDay] = travelActivities[oldDay].filter(a => a.id !== activityId);
+            
+            // Adicionar à nova lista
+            const activity = {
+                id: activityId,
+                startTime: startTime,
+                endTime: endTime,
+                title: title,
+                desc: desc,
+                cost: cost,
+                address: address,
+                duration: duration,
+                createdBy: currentUser.username,
+                authorName: currentUser.fullName,
+                startHour: parseInt(startTime.split(':')[0])
+            };
+            
+            if (!travelActivities[newDay]) travelActivities[newDay] = [];
+            travelActivities[newDay].push(activity);
+            
+            // Ordenar atividades
+            travelActivities[oldDay].sort((a, b) => a.startTime.localeCompare(b.startTime));
+            travelActivities[newDay].sort((a, b) => a.startTime.localeCompare(b.startTime));
+            
+            saveToLocalStorage();
+            renderDayActivities(oldDay);
+            renderDayActivities(newDay);
+            updateDayTotals();
+            
+            const activeDay = document.querySelector('.day-btn.active')?.getAttribute('data-day');
+            if (oldDay === activeDay || newDay === activeDay) {
+                showDayActivities(activeDay);
+            }
+            
+            // Renderizar timeline se estiver ativa
+            if (document.querySelector('.tab-btn[data-tab="timeline"]').classList.contains('active')) {
+                const timelineDay = document.querySelector('.timeline-day-btn.active')?.getAttribute('data-day');
+                if (oldDay === timelineDay || newDay === timelineDay) {
+                    renderTimeline(timelineDay);
+                }
             }
         }
         
@@ -1782,10 +2342,14 @@
             travelActivities[day] = travelActivities[day].filter(activity => activity.id !== activityId);
             saveToLocalStorage();
             renderDayActivities(day);
+            updateDayTotals();
             
             // Renderizar timeline se estiver ativa
             if (document.querySelector('.tab-btn[data-tab="timeline"]').classList.contains('active')) {
-                renderTimeline(day);
+                const timelineDay = document.querySelector('.timeline-day-btn.active')?.getAttribute('data-day');
+                if (day === timelineDay) {
+                    renderTimeline(timelineDay);
+                }
             }
         }
         
@@ -1832,7 +2396,9 @@
                     const userColor = users[activity.createdBy] ? users[activity.createdBy].color : 'felipe';
                     const activityCard = document.createElement('div');
                     activityCard.className = `activity-card ${userColor}`;
-                    activityCard.innerHTML = `
+                    
+                    // Construir HTML da atividade
+                    let activityHTML = `
                         <div class="activity-header">
                             <div>
                                 <div class="activity-time">
@@ -1840,25 +2406,67 @@
                                     <span class="activity-duration">
                                         <i class="fas fa-hourglass-half"></i> ${formatDuration(activity.duration)}
                                     </span>
+                    `;
+                    
+                    // Adicionar custo se existir
+                    if (activity.cost && activity.cost > 0) {
+                        activityHTML += `
+                                    <span class="activity-cost">
+                                        <i class="fas fa-money-bill-wave"></i> ${formatCurrency(activity.cost)}
+                                    </span>
+                        `;
+                    }
+                    
+                    activityHTML += `
                                 </div>
                             </div>
                             <div class="activity-title">${activity.title}</div>
                         </div>
-                        ${activity.desc ? `<div class="activity-desc">${activity.desc}</div>` : ''}
+                    `;
+                    
+                    // Adicionar descrição se existir
+                    if (activity.desc) {
+                        activityHTML += `<div class="activity-desc">${activity.desc}</div>`;
+                    }
+                    
+                    // Adicionar endereço se existir
+                    if (activity.address) {
+                        activityHTML += `
+                            <div class="activity-address" onclick="openGoogleMaps('${activity.address.replace(/'/g, "\\'")}')">
+                                <div class="address-text">
+                                    <i class="fas fa-map-marker-alt"></i> ${activity.address}
+                                </div>
+                                <div class="maps-link">
+                                    Ver no Maps <i class="fas fa-external-link-alt"></i>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    activityHTML += `
                         <div class="activity-author">
                             <div class="author-avatar ${userColor}">${activity.createdBy === 'felipe.ruas' ? 'F' : 'B'}</div>
                             <div class="author-name">
                                 Adicionado por: <strong>${activity.authorName || activity.createdBy}</strong>
                             </div>
                         </div>
-                        ${activity.createdBy === currentUser.username ? `
+                    `;
+                    
+                    // Adicionar botões de ação se for o criador
+                    if (activity.createdBy === currentUser.username) {
+                        activityHTML += `
                         <div class="activity-actions">
+                            <button class="btn-edit" onclick="openEditModal(${activity.id}, '${day}')">
+                                <i class="fas fa-edit"></i> Editar
+                            </button>
                             <button class="btn-delete" onclick="removeActivity(${activity.id}, '${day}')">
                                 <i class="fas fa-trash"></i> Remover
                             </button>
                         </div>
-                        ` : ''}
-                    `;
+                        `;
+                    }
+                    
+                    activityCard.innerHTML = activityHTML;
                     container.appendChild(activityCard);
                 });
             }
@@ -1879,7 +2487,7 @@
             if (dayElement) dayElement.style.display = 'block';
         }
         
-        // Renderizar timeline por horário (NOVA FUNÇÃO)
+        // Renderizar timeline por horário
         function renderTimeline(day = null) {
             if (!day) {
                 day = document.querySelector('.timeline-day-btn.active')?.getAttribute('data-day') || '18';
@@ -1897,6 +2505,9 @@
                 '20': '20 de Junho - Terceiro dia',
                 '21': '21 de Junho - Partida de Gramado'
             };
+            
+            // Calcular custo total do dia
+            const dayCost = calculateDayCost(day);
             
             // Criar linha para cada horário
             timelineHours.forEach(hour => {
@@ -1923,19 +2534,55 @@
                     const userColor = users[activityInHour.createdBy] ? users[activityInHour.createdBy].color : 'felipe';
                     const activityElement = document.createElement('div');
                     activityElement.className = `timeline-activity ${userColor}`;
-                    activityElement.innerHTML = `
+                    
+                    let activityHTML = `
                         <div class="timeline-activity-header">
                             <div class="timeline-activity-title">${activityInHour.title}</div>
                             <div class="timeline-activity-time">
                                 <i class="far fa-clock"></i> ${activityInHour.startTime} - ${activityInHour.endTime}
+                    `;
+                    
+                    // Adicionar custo se existir
+                    if (activityInHour.cost && activityInHour.cost > 0) {
+                        activityHTML += `
+                                <span class="timeline-activity-cost">
+                                    <i class="fas fa-money-bill-wave"></i> ${formatCurrency(activityInHour.cost)}
+                                </span>
+                        `;
+                    }
+                    
+                    activityHTML += `
                             </div>
                         </div>
-                        ${activityInHour.desc ? `<div class="timeline-activity-desc">${activityInHour.desc}</div>` : ''}
+                    `;
+                    
+                    // Adicionar descrição se existir
+                    if (activityInHour.desc) {
+                        activityHTML += `<div class="timeline-activity-desc">${activityInHour.desc}</div>`;
+                    }
+                    
+                    // Adicionar endereço se existir
+                    if (activityInHour.address) {
+                        activityHTML += `
+                            <div class="timeline-activity-address" onclick="openGoogleMaps('${activityInHour.address.replace(/'/g, "\\'")}')">
+                                <div class="timeline-address-text">
+                                    <i class="fas fa-map-marker-alt"></i> ${activityInHour.address}
+                                </div>
+                                <div class="timeline-maps-link">
+                                    Ver no Maps <i class="fas fa-external-link-alt"></i>
+                                </div>
+                            </div>
+                        `;
+                    }
+                    
+                    activityHTML += `
                         <div class="timeline-activity-author">
                             <div class="timeline-author-avatar ${userColor}">${activityInHour.createdBy === 'felipe.ruas' ? 'F' : 'B'}</div>
                             <div>${activityInHour.authorName || activityInHour.createdBy}</div>
                         </div>
                     `;
+                    
+                    activityElement.innerHTML = activityHTML;
                     hourContent.appendChild(activityElement);
                 } else {
                     hourContent.classList.add('empty');
@@ -1960,7 +2607,8 @@
             dayInfo.innerHTML = `
                 <strong>${dayNames[day]}</strong> - 
                 ${activitiesList.length} atividade${activitiesList.length !== 1 ? 's' : ''} • 
-                Total: ${formatDuration(calculateDayTotal(day))}
+                Total: ${formatDuration(calculateDayTotal(day))} • 
+                Custo total: <span style="color: var(--money); font-weight: 600;">${formatCurrency(dayCost)}</span>
             `;
             timelineGrid.appendChild(dayInfo);
         }
