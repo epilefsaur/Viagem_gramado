@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Viagem Compartilhada - Gramado 2026</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <style>
         :root {
             --primary: #3a6ea5;
@@ -17,7 +16,6 @@
             --warning: #ff9800;
             --felipe: #3a6ea5;
             --bruna: #e91e63;
-            --money: #4caf50;
         }
         
         * {
@@ -125,6 +123,10 @@
             font-size: 0.9rem;
             margin-top: 10px;
             display: none;
+            background-color: #ffebee;
+            padding: 10px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent);
         }
         
         .login-info {
@@ -193,13 +195,14 @@
         .credential-card p {
             font-size: 0.8rem;
             color: #666;
+            margin-bottom: 3px;
         }
         
         /* Estilos principais (quando logado) */
         .container {
-            max-width: 1400px;
+            max-width: 1200px;
             margin: 0 auto;
-            display: none; /* Escondido inicialmente */
+            display: none;
         }
         
         header {
@@ -307,79 +310,25 @@
             background-color: var(--accent);
         }
         
-        /* Sistema de Abas */
-        .tabs-container {
-            margin-bottom: 25px;
-            background-color: white;
-            border-radius: 15px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            overflow: hidden;
-        }
-        
-        .tabs-header {
+        .main-container {
             display: flex;
-            background-color: var(--primary);
-            border-bottom: 3px solid var(--secondary);
+            flex-direction: column;
+            gap: 25px;
         }
         
-        .tab-btn {
-            flex: 1;
-            padding: 18px 20px;
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.1rem;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-        
-        .tab-btn:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-        
-        .tab-btn.active {
-            background-color: white;
-            color: var(--primary);
-            position: relative;
-        }
-        
-        .tab-btn.active::after {
-            content: '';
-            position: absolute;
-            bottom: -3px;
-            left: 0;
-            width: 100%;
-            height: 3px;
-            background-color: var(--primary);
-        }
-        
-        .tab-content {
-            display: none;
-            padding: 30px;
-            animation: fadeIn 0.5s ease;
-        }
-        
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        
-        .tab-content.active {
-            display: block;
+        @media (min-width: 992px) {
+            .main-container {
+                flex-direction: row;
+            }
         }
         
         /* Painel de Adição */
         .add-panel {
+            flex: 1;
             background-color: white;
             border-radius: 15px;
-            padding: 25px;
+            padding: 20px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-            margin-bottom: 25px;
         }
         
         .add-panel h2 {
@@ -407,7 +356,7 @@
             color: var(--primary);
         }
         
-        select, textarea, input {
+        select, textarea {
             width: 100%;
             padding: 12px 15px;
             border: 1px solid #ddd;
@@ -416,7 +365,7 @@
             transition: border 0.3s;
         }
         
-        select:focus, textarea:focus, input:focus {
+        select:focus, textarea:focus {
             outline: none;
             border-color: var(--primary);
         }
@@ -424,42 +373,6 @@
         textarea {
             resize: vertical;
             min-height: 100px;
-        }
-        
-        .money-input {
-            position: relative;
-        }
-        
-        .money-input::before {
-            content: 'R$';
-            position: absolute;
-            left: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #666;
-            font-weight: 500;
-        }
-        
-        .money-input input {
-            padding-left: 40px;
-        }
-        
-        .address-input {
-            position: relative;
-        }
-        
-        .address-input input {
-            padding-right: 40px;
-        }
-        
-        .maps-icon {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--primary);
-            cursor: pointer;
-            font-size: 1.2rem;
         }
         
         .btn {
@@ -471,6 +384,7 @@
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
+            width: 100%;
             transition: background-color 0.3s;
             display: flex;
             justify-content: center;
@@ -484,27 +398,18 @@
         
         .btn-add {
             background-color: var(--success);
-            width: 100%;
         }
         
         .btn-add:hover {
             background-color: #3d8b40;
         }
         
-        .btn-edit {
-            background-color: var(--warning);
-            color: white;
-        }
-        
-        .btn-edit:hover {
-            background-color: #e68900;
-        }
-        
-        /* Visualizador de Agenda (Aba Agenda) */
+        /* Visualizador de Agenda */
         .viewer-panel {
+            flex: 2;
             background-color: white;
             border-radius: 15px;
-            padding: 25px;
+            padding: 20px;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
         }
         
@@ -562,37 +467,15 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .day-counter {
-            font-size: 0.95rem;
-            color: #666;
-            font-weight: normal;
-            background-color: #f0f7ff;
-            padding: 5px 12px;
-            border-radius: 20px;
         }
         
         .day-total-time {
             font-size: 0.9rem;
             color: #666;
             font-weight: normal;
-            background-color: #e8f5e9;
-            padding: 5px 12px;
+            background-color: #f0f7ff;
+            padding: 5px 10px;
             border-radius: 20px;
-        }
-        
-        .day-total-cost {
-            font-size: 0.9rem;
-            color: #666;
-            font-weight: normal;
-            background-color: #e8f5e9;
-            padding: 5px 12px;
-            border-radius: 20px;
-            color: var(--money);
-            font-weight: 600;
         }
         
         .no-activities {
@@ -653,19 +536,6 @@
             gap: 3px;
         }
         
-        .activity-cost {
-            background-color: #e8f5e9;
-            color: var(--money);
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            margin-left: 5px;
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            font-weight: 600;
-        }
-        
         .activity-title {
             font-weight: 700;
             font-size: 1.2rem;
@@ -679,37 +549,6 @@
             margin-top: 8px;
             padding-top: 8px;
             border-top: 1px dashed #ddd;
-        }
-        
-        .activity-address {
-            color: #666;
-            margin-top: 8px;
-            padding: 8px;
-            background-color: #f0f7ff;
-            border-radius: 6px;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        
-        .activity-address:hover {
-            background-color: #e1ecf7;
-        }
-        
-        .address-text {
-            flex: 1;
-        }
-        
-        .maps-link {
-            color: var(--primary);
-            font-size: 0.8rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-left: 10px;
         }
         
         .activity-author {
@@ -778,297 +617,6 @@
             display: none;
         }
         
-        /* Visualização por Horário (Nova Aba) */
-        .timeline-container {
-            background-color: white;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
-        }
-        
-        .timeline-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-        
-        .timeline-header h2 {
-            color: var(--primary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .timeline-day-selector {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-            flex-wrap: wrap;
-        }
-        
-        .timeline-day-btn {
-            padding: 10px 20px;
-            background-color: #e9ecef;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s;
-        }
-        
-        .timeline-day-btn:hover {
-            background-color: #dde5ec;
-        }
-        
-        .timeline-day-btn.active {
-            background-color: var(--primary);
-            color: white;
-        }
-        
-        .timeline-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            min-height: 600px;
-        }
-        
-        .timeline-hour-row {
-            display: flex;
-            align-items: stretch;
-            min-height: 70px;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.05);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        
-        .timeline-hour-row:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-        
-        .timeline-hour-label {
-            width: 100px;
-            background-color: var(--primary);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.1rem;
-            padding: 10px;
-        }
-        
-        .timeline-hour-content {
-            flex: 1;
-            background-color: #f8f9fa;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            min-height: 70px;
-        }
-        
-        .timeline-hour-content.empty {
-            color: #95a5a6;
-            font-style: italic;
-            font-size: 1rem;
-        }
-        
-        .timeline-activity {
-            width: 100%;
-            background-color: #e8f6f3;
-            border-left: 5px solid var(--primary);
-            border-radius: 6px;
-            padding: 15px;
-        }
-        
-        .timeline-activity.felipe {
-            background-color: rgba(58, 110, 165, 0.1);
-            border-left-color: var(--felipe);
-        }
-        
-        .timeline-activity.bruna {
-            background-color: rgba(233, 30, 99, 0.1);
-            border-left-color: var(--bruna);
-        }
-        
-        .timeline-activity-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 8px;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-        
-        .timeline-activity-title {
-            font-weight: 700;
-            font-size: 1.1rem;
-            color: var(--dark);
-            flex: 1;
-        }
-        
-        .timeline-activity-time {
-            background-color: rgba(255, 255, 255, 0.7);
-            color: var(--dark);
-            padding: 4px 10px;
-            border-radius: 15px;
-            font-weight: 600;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .timeline-activity-cost {
-            background-color: rgba(76, 175, 80, 0.2);
-            color: var(--money);
-            padding: 3px 8px;
-            border-radius: 12px;
-            font-size: 0.8rem;
-            margin-left: 5px;
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            font-weight: 600;
-        }
-        
-        .timeline-activity-desc {
-            color: #555;
-            font-size: 0.95rem;
-            margin-top: 8px;
-            padding-top: 8px;
-            border-top: 1px dashed rgba(0, 0, 0, 0.1);
-        }
-        
-        .timeline-activity-address {
-            color: #666;
-            margin-top: 8px;
-            padding: 8px;
-            background-color: rgba(58, 110, 165, 0.1);
-            border-radius: 6px;
-            font-size: 0.85rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-        
-        .timeline-activity-address:hover {
-            background-color: rgba(58, 110, 165, 0.2);
-        }
-        
-        .timeline-address-text {
-            flex: 1;
-        }
-        
-        .timeline-maps-link {
-            color: var(--primary);
-            font-size: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            margin-left: 10px;
-        }
-        
-        .timeline-activity-author {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-top: 10px;
-            font-size: 0.85rem;
-            color: #666;
-        }
-        
-        .timeline-author-avatar {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.6rem;
-            font-weight: bold;
-            color: white;
-        }
-        
-        .timeline-author-avatar.felipe {
-            background-color: var(--felipe);
-        }
-        
-        .timeline-author-avatar.bruna {
-            background-color: var(--bruna);
-        }
-        
-        /* Modal de Edição */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1000;
-            justify-content: center;
-            align-items: center;
-            animation: fadeIn 0.3s ease;
-        }
-        
-        .modal-content {
-            background-color: white;
-            padding: 30px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            animation: slideIn 0.3s ease;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateY(-30px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        
-        .modal h3 {
-            color: var(--primary);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--secondary);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        
-        .modal-buttons {
-            display: flex;
-            gap: 10px;
-            margin-top: 25px;
-            justify-content: flex-end;
-        }
-        
-        .btn-cancel {
-            background-color: #95a5a6;
-            color: white;
-        }
-        
-        .btn-cancel:hover {
-            background-color: #7f8c8d;
-        }
-        
-        .btn-save {
-            background-color: var(--success);
-            color: white;
-        }
-        
-        .btn-save:hover {
-            background-color: #3d8b40;
-        }
-        
         footer {
             text-align: center;
             margin-top: 30px;
@@ -1106,15 +654,7 @@
                 padding: 8px;
             }
             
-            .tabs-header {
-                flex-direction: column;
-            }
-            
-            .tab-btn {
-                padding: 15px;
-            }
-            
-            .add-panel, .viewer-panel, .timeline-container, .modal-content {
+            .add-panel, .viewer-panel {
                 padding: 15px;
             }
             
@@ -1127,39 +667,17 @@
                 display: none;
             }
             
-            .day-selector, .timeline-day-selector {
+            .day-selector {
                 justify-content: center;
             }
             
-            .timeline-hour-row {
-                flex-direction: column;
-            }
-            
-            .timeline-hour-label {
-                width: 100%;
-                padding: 10px;
-            }
-            
-            .activity-header, .timeline-activity-header {
+            .activity-header {
                 flex-direction: column;
                 align-items: flex-start;
             }
             
-            .activity-title, .timeline-activity-title {
+            .activity-title {
                 min-width: unset;
-                width: 100%;
-            }
-            
-            .day-title {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .modal-buttons {
-                flex-direction: column;
-            }
-            
-            .btn {
                 width: 100%;
             }
         }
@@ -1187,22 +705,9 @@
             100% { opacity: 0.6; }
         }
         
-        .form-row {
-            display: flex;
-            gap: 15px;
-            margin-bottom: 20px;
-        }
-        
-        .form-row .form-group {
-            flex: 1;
-            margin-bottom: 0;
-        }
-        
-        @media (max-width: 768px) {
-            .form-row {
-                flex-direction: column;
-                gap: 20px;
-            }
+        /* Ajustes para melhor visualização */
+        .form-group input[type="text"] {
+            margin-top: 5px;
         }
     </style>
 </head>
@@ -1218,12 +723,12 @@
             <form class="login-form" id="login-form">
                 <div class="form-group">
                     <label for="username">Usuário:</label>
-                    <input type="text" id="username" placeholder="Digite seu usuário" required>
+                    <input type="text" id="username" placeholder="Digite seu usuário" required autocomplete="username">
                 </div>
                 
                 <div class="form-group">
                     <label for="password">Senha:</label>
-                    <input type="password" id="password" placeholder="Digite sua senha" required>
+                    <input type="password" id="password" placeholder="Digite sua senha" required autocomplete="current-password">
                 </div>
                 
                 <button type="submit" class="btn-login">
@@ -1274,50 +779,37 @@
             
             <div class="connection-status" id="connection-status">
                 <span class="status-dot status-disconnected" id="status-dot"></span>
-                <span id="status-text">Conectando ao servidor...</span>
+                <span id="status-text">Modo Local - Dados salvos no navegador</span>
             </div>
         </header>
         
-        <!-- Sistema de Abas -->
-        <div class="tabs-container">
-            <div class="tabs-header">
-                <button class="tab-btn active" data-tab="add">
-                    <i class="fas fa-plus-circle"></i> Adicionar Atividade
-                </button>
-                <button class="tab-btn" data-tab="agenda">
-                    <i class="fas fa-calendar-alt"></i> Agenda Compartilhada
-                </button>
-                <button class="tab-btn" data-tab="timeline">
-                    <i class="fas fa-clock"></i> Visualização por Horário
-                </button>
-            </div>
-            
-            <!-- Aba: Adicionar Atividade -->
-            <div id="tab-add" class="tab-content active">
-                <section class="add-panel">
-                    <h2><i class="fas fa-plus-circle"></i> Adicionar Atividade</h2>
-                    <div class="realtime-notice">
-                        <i class="fas fa-sync-alt sync-indicator"></i>
-                        <span>Alterações são salvas e compartilhadas automaticamente</span>
+        <div class="main-container">
+            <!-- Painel para adicionar atividades -->
+            <section class="add-panel">
+                <h2><i class="fas fa-plus-circle"></i> Adicionar Atividade</h2>
+                <div class="realtime-notice">
+                    <i class="fas fa-sync-alt"></i>
+                    <span>Dados salvos automaticamente no seu navegador</span>
+                </div>
+                
+                <form id="activity-form">
+                    <div class="form-group">
+                        <label for="day-select">Dia da viagem:</label>
+                        <select id="day-select" required>
+                            <option value="">Selecione o dia</option>
+                            <option value="18">18 de Junho (Dia 1 - Chegada)</option>
+                            <option value="19">19 de Junho (Dia 2)</option>
+                            <option value="20">20 de Junho (Dia 3)</option>
+                            <option value="21">21 de Junho (Dia 4 - Partida)</option>
+                        </select>
                     </div>
                     
-                    <form id="activity-form">
-                        <div class="form-group">
-                            <label for="day-select">Dia da viagem:</label>
-                            <select id="day-select" required>
-                                <option value="">Selecione o dia</option>
-                                <option value="18">18 de Junho (Dia 1 - Chegada)</option>
-                                <option value="19">19 de Junho (Dia 2)</option>
-                                <option value="20">20 de Junho (Dia 3)</option>
-                                <option value="21">21 de Junho (Dia 4 - Partida)</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group">
-                                <label for="start-time">Horário início:</label>
+                    <div class="form-group">
+                        <label for="start-time">Horário:</label>
+                        <div class="time-container">
+                            <div class="time-input">
                                 <select id="start-time" required>
-                                    <option value="">Selecione</option>
+                                    <option value="">Início</option>
                                     <option value="06:00">06:00</option>
                                     <option value="07:00">07:00</option>
                                     <option value="08:00">08:00</option>
@@ -1337,11 +829,10 @@
                                     <option value="22:00">22:00</option>
                                 </select>
                             </div>
-                            
-                            <div class="form-group">
-                                <label for="end-time">Horário término:</label>
+                            <div class="time-separator">até</div>
+                            <div class="time-input">
                                 <select id="end-time" required>
-                                    <option value="">Selecione</option>
+                                    <option value="">Término</option>
                                     <option value="07:00">07:00</option>
                                     <option value="08:00">08:00</option>
                                     <option value="09:00">09:00</option>
@@ -1362,244 +853,96 @@
                                 </select>
                             </div>
                         </div>
-                        
                         <div class="time-error" id="time-error">O horário de término deve ser depois do horário de início</div>
-                        
-                        <div class="form-group">
-                            <label for="activity-title">Título da atividade:</label>
-                            <input type="text" id="activity-title" placeholder="Ex: Visitar o Lago Negro" required>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="activity-desc">Descrição (opcional):</label>
-                            <textarea id="activity-desc" placeholder="Detalhes, observações..."></textarea>
-                        </div>
-                        
-                        <div class="form-row">
-                            <div class="form-group money-input">
-                                <label for="activity-cost">Valor estimado (R$):</label>
-                                <input type="number" id="activity-cost" placeholder="0,00" step="0.01" min="0">
-                            </div>
-                            
-                            <div class="form-group address-input">
-                                <label for="activity-address">Endereço (opcional):</label>
-                                <input type="text" id="activity-address" placeholder="Ex: Rua das Flores, 123, Gramado">
-                                <div class="maps-icon" id="preview-address" title="Visualizar no Google Maps">
-                                    <i class="fas fa-map-marker-alt"></i>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <div id="current-user-indicator">
-                                <small>Adicionando como: <strong id="current-user-name">Felipe Ruas</strong></small>
-                            </div>
-                        </div>
-                        
-                        <button type="submit" class="btn btn-add" id="submit-activity-btn">
-                            <i class="fas fa-calendar-plus"></i> Adicionar à Agenda Compartilhada
-                        </button>
-                    </form>
-                </section>
-            </div>
-            
-            <!-- Aba: Agenda Compartilhada -->
-            <div id="tab-agenda" class="tab-content">
-                <section class="viewer-panel">
-                    <div class="viewer-header">
-                        <h2><i class="fas fa-calendar-alt"></i> Agenda Compartilhada</h2>
-                        <div class="day-selector">
-                            <button class="day-btn active" data-day="18">Dia 1</button>
-                            <button class="day-btn" data-day="19">Dia 2</button>
-                            <button class="day-btn" data-day="20">Dia 3</button>
-                            <button class="day-btn" data-day="21">Dia 4</button>
-                        </div>
-                    </div>
-                    
-                    <div class="activities-container">
-                        <div id="day-18" class="day-activities">
-                            <h3 class="day-title">18 de Junho - Chegada a Gramado 
-                                <span class="day-counter">0 atividades</span>
-                                <span class="day-total-time">Total: 0h</span>
-                                <span class="day-total-cost" id="day-18-cost">R$ 0,00</span>
-                            </h3>
-                            <div class="no-activities">
-                                <p>Nenhuma atividade adicionada para este dia.</p>
-                                <p>Use o formulário ao lado para adicionar atividades.</p>
-                            </div>
-                        </div>
-                        
-                        <div id="day-19" class="day-activities" style="display: none;">
-                            <h3 class="day-title">19 de Junho - Segundo dia
-                                <span class="day-counter">0 atividades</span>
-                                <span class="day-total-time">Total: 0h</span>
-                                <span class="day-total-cost" id="day-19-cost">R$ 0,00</span>
-                            </h3>
-                            <div class="no-activities">
-                                <p>Nenhuma atividade adicionada para este dia.</p>
-                            </div>
-                        </div>
-                        
-                        <div id="day-20" class="day-activities" style="display: none;">
-                            <h3 class="day-title">20 de Junho - Terceiro dia
-                                <span class="day-counter">0 atividades</span>
-                                <span class="day-total-time">Total: 0h</span>
-                                <span class="day-total-cost" id="day-20-cost">R$ 0,00</span>
-                            </h3>
-                            <div class="no-activities">
-                                <p>Nenhuma atividade adicionada para este dia.</p>
-                            </div>
-                        </div>
-                        
-                        <div id="day-21" class="day-activities" style="display: none;">
-                            <h3 class="day-title">21 de Junho - Partida de Gramado
-                                <span class="day-counter">0 atividades</span>
-                                <span class="day-total-time">Total: 0h</span>
-                                <span class="day-total-cost" id="day-21-cost">R$ 0,00</span>
-                            </h3>
-                            <div class="no-activities">
-                                <p>Nenhuma atividade adicionada para este dia.</p>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-            
-            <!-- Aba: Visualização por Horário -->
-            <div id="tab-timeline" class="tab-content">
-                <section class="timeline-container">
-                    <div class="timeline-header">
-                        <h2><i class="fas fa-clock"></i> Visualização por Horário</h2>
-                        <div class="timeline-day-selector">
-                            <button class="timeline-day-btn active" data-day="18">Dia 1 - 18/06</button>
-                            <button class="timeline-day-btn" data-day="19">Dia 2 - 19/06</button>
-                            <button class="timeline-day-btn" data-day="20">Dia 3 - 20/06</button>
-                            <button class="timeline-day-btn" data-day="21">Dia 4 - 21/06</button>
-                        </div>
-                    </div>
-                    
-                    <div class="timeline-grid" id="timeline-grid">
-                        <!-- As atividades por horário serão carregadas aqui dinamicamente -->
-                    </div>
-                </section>
-            </div>
-        </div>
-        
-        <!-- Modal de Edição -->
-        <div class="modal" id="edit-modal">
-            <div class="modal-content">
-                <h3><i class="fas fa-edit"></i> Editar Atividade</h3>
-                <form id="edit-form">
-                    <input type="hidden" id="edit-id">
-                    <input type="hidden" id="edit-day">
-                    
-                    <div class="form-group">
-                        <label for="edit-day-select">Dia da viagem:</label>
-                        <select id="edit-day-select" required>
-                            <option value="18">18 de Junho (Dia 1 - Chegada)</option>
-                            <option value="19">19 de Junho (Dia 2)</option>
-                            <option value="20">20 de Junho (Dia 3)</option>
-                            <option value="21">21 de Junho (Dia 4 - Partida)</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="edit-start-time">Horário início:</label>
-                            <select id="edit-start-time" required>
-                                <option value="06:00">06:00</option>
-                                <option value="07:00">07:00</option>
-                                <option value="08:00">08:00</option>
-                                <option value="09:00">09:00</option>
-                                <option value="10:00">10:00</option>
-                                <option value="11:00">11:00</option>
-                                <option value="12:00">12:00</option>
-                                <option value="13:00">13:00</option>
-                                <option value="14:00">14:00</option>
-                                <option value="15:00">15:00</option>
-                                <option value="16:00">16:00</option>
-                                <option value="17:00">17:00</option>
-                                <option value="18:00">18:00</option>
-                                <option value="19:00">19:00</option>
-                                <option value="20:00">20:00</option>
-                                <option value="21:00">21:00</option>
-                                <option value="22:00">22:00</option>
-                            </select>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label for="edit-end-time">Horário término:</label>
-                            <select id="edit-end-time" required>
-                                <option value="07:00">07:00</option>
-                                <option value="08:00">08:00</option>
-                                <option value="09:00">09:00</option>
-                                <option value="10:00">10:00</option>
-                                <option value="11:00">11:00</option>
-                                <option value="12:00">12:00</option>
-                                <option value="13:00">13:00</option>
-                                <option value="14:00">14:00</option>
-                                <option value="15:00">15:00</option>
-                                <option value="16:00">16:00</option>
-                                <option value="17:00">17:00</option>
-                                <option value="18:00">18:00</option>
-                                <option value="19:00">19:00</option>
-                                <option value="20:00">20:00</option>
-                                <option value="21:00">21:00</option>
-                                <option value="22:00">22:00</option>
-                                <option value="23:00">23:00</option>
-                            </select>
-                        </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="edit-title">Título da atividade:</label>
-                        <input type="text" id="edit-title" required>
+                        <label for="activity-title">Título da atividade:</label>
+                        <input type="text" id="activity-title" placeholder="Ex: Visitar o Lago Negro" required>
                     </div>
                     
                     <div class="form-group">
-                        <label for="edit-desc">Descrição (opcional):</label>
-                        <textarea id="edit-desc"></textarea>
+                        <label for="activity-desc">Descrição (opcional):</label>
+                        <textarea id="activity-desc" placeholder="Detalhes, endereço, observações..."></textarea>
                     </div>
                     
-                    <div class="form-row">
-                        <div class="form-group money-input">
-                            <label for="edit-cost">Valor estimado (R$):</label>
-                            <input type="number" id="edit-cost" step="0.01" min="0">
-                        </div>
-                        
-                        <div class="form-group address-input">
-                            <label for="edit-address">Endereço (opcional):</label>
-                            <input type="text" id="edit-address" placeholder="Ex: Rua das Flores, 123, Gramado">
-                            <div class="maps-icon" id="edit-preview-address" title="Visualizar no Google Maps">
-                                <i class="fas fa-map-marker-alt"></i>
-                            </div>
+                    <div class="form-group">
+                        <div id="current-user-indicator">
+                            <small>Adicionando como: <strong id="current-user-name">Felipe Ruas</strong></small>
                         </div>
                     </div>
                     
-                    <div class="modal-buttons">
-                        <button type="button" class="btn btn-cancel" id="cancel-edit">
-                            <i class="fas fa-times"></i> Cancelar
-                        </button>
-                        <button type="submit" class="btn btn-save">
-                            <i class="fas fa-save"></i> Salvar Alterações
-                        </button>
-                    </div>
+                    <button type="submit" class="btn btn-add">
+                        <i class="fas fa-calendar-plus"></i> Adicionar à Agenda
+                    </button>
                 </form>
-            </div>
+            </section>
+            
+            <!-- Visualizador da agenda -->
+            <section class="viewer-panel">
+                <div class="viewer-header">
+                    <h2><i class="fas fa-calendar-alt"></i> Agenda Compartilhada</h2>
+                    <div class="day-selector">
+                        <button class="day-btn active" data-day="18">Dia 1</button>
+                        <button class="day-btn" data-day="19">Dia 2</button>
+                        <button class="day-btn" data-day="20">Dia 3</button>
+                        <button class="day-btn" data-day="21">Dia 4</button>
+                    </div>
+                </div>
+                
+                <div class="activities-container">
+                    <div id="day-18" class="day-activities">
+                        <h3 class="day-title">18 de Junho - Chegada a Gramado 
+                            <span class="day-counter">0 atividades</span>
+                            <span class="day-total-time">Total: 0h</span>
+                        </h3>
+                        <div class="no-activities">
+                            <p>Nenhuma atividade adicionada para este dia.</p>
+                            <p>Use o formulário ao lado para adicionar atividades.</p>
+                        </div>
+                    </div>
+                    
+                    <div id="day-19" class="day-activities" style="display: none;">
+                        <h3 class="day-title">19 de Junho - Segundo dia
+                            <span class="day-counter">0 atividades</span>
+                            <span class="day-total-time">Total: 0h</span>
+                        </h3>
+                        <div class="no-activities">
+                            <p>Nenhuma atividade adicionada para este dia.</p>
+                        </div>
+                    </div>
+                    
+                    <div id="day-20" class="day-activities" style="display: none;">
+                        <h3 class="day-title">20 de Junho - Terceiro dia
+                            <span class="day-counter">0 atividades</span>
+                            <span class="day-total-time">Total: 0h</span>
+                        </h3>
+                        <div class="no-activities">
+                            <p>Nenhuma atividade adicionada para este dia.</p>
+                        </div>
+                    </div>
+                    
+                    <div id="day-21" class="day-activities" style="display: none;">
+                        <h3 class="day-title">21 de Junho - Partida de Gramado
+                            <span class="day-counter">0 atividades</span>
+                            <span class="day-total-time">Total: 0h</span>
+                        </h3>
+                        <div class="no-activities">
+                            <p>Nenhuma atividade adicionada para este dia.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </div>
         
         <footer>
             <p>Viagem Compartilhada para Gramado/RS - Junho 2026</p>
-            <p>Atualizações em tempo real • Dados salvos na nuvem</p>
+            <p>Modo Local • Dados salvos no navegador</p>
         </footer>
     </div>
 
     <script>
-        // Configuração do Supabase
-        const SUPABASE_URL = 'https://forpfassxqfjwqhaotod.supabase.co';
-        const SUPABASE_ANON_KEY = 'sb_publishable_jYYdY6U6W7CnUCHJPcyu-Q_NGN-S3u5';
-        
-        // Dados dos usuários
+        // Dados dos usuários - CORRIGIDO
         const users = {
             'felipe.ruas': {
                 username: 'felipe.ruas',
@@ -1621,97 +964,149 @@
         
         // Estado da aplicação
         let currentUser = null;
-        let supabase = null;
         let travelActivities = {
             "18": [], "19": [], "20": [], "21": []
         };
-        let editingActivity = null;
-        
-        // Horários para visualização por horário
-        const timelineHours = [
-            "06:00", "07:00", "08:00", "09:00", "10:00", 
-            "11:00", "12:00", "13:00", "14:00", "15:00", 
-            "16:00", "17:00", "18:00", "19:00", "20:00", 
-            "21:00", "22:00"
-        ];
         
         // Inicializar
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Sistema de Viagem carregado!');
+            console.log('👥 Usuários disponíveis:', Object.keys(users));
+            
             // Verificar se já está logado
             const savedUser = localStorage.getItem('travelLoggedUser');
             if (savedUser) {
                 try {
                     currentUser = JSON.parse(savedUser);
-                    showMainApp();
-                    initSupabase();
+                    console.log('✅ Usuário recuperado:', currentUser.fullName);
+                    
+                    // Verificar se o usuário ainda existe
+                    if (users[currentUser.username]) {
+                        showMainApp();
+                        loadSavedData();
+                    } else {
+                        console.log('❌ Usuário inválido no localStorage');
+                        localStorage.removeItem('travelLoggedUser');
+                        showLogin();
+                    }
                 } catch (e) {
+                    console.error('❌ Erro ao recuperar usuário:', e);
                     localStorage.removeItem('travelLoggedUser');
                     showLogin();
                 }
             } else {
+                console.log('👤 Nenhum usuário logado, mostrando tela de login');
                 showLogin();
             }
             
-            // Configurar formulário de login
-            document.getElementById('login-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                handleLogin();
-            });
+            // Configurar formulário de login - CORRIGIDO
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault(); // IMPEDIR COMPORTAMENTO PADRÃO DO FORMULÁRIO
+                    console.log('📝 Formulário de login submetido');
+                    handleLogin();
+                });
+            }
             
             // Configurar logout
-            document.getElementById('btn-logout').addEventListener('click', function() {
-                handleLogout();
-            });
+            const logoutBtn = document.getElementById('btn-logout');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    console.log('👋 Usuário solicitou logout');
+                    handleLogout();
+                });
+            }
         });
         
-        // Função de login
+        // Função de login - CORRIGIDA
         function handleLogin() {
-            const username = document.getElementById('username').value.trim();
-            const password = document.getElementById('password').value;
+            console.log('🔐 Iniciando processo de login...');
+            
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
             const errorElement = document.getElementById('login-error');
             
-            // Validar credenciais
-            if (!users[username]) {
-                errorElement.style.display = 'block';
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value;
+            
+            console.log('📋 Dados inseridos:', { username, password });
+            
+            // Resetar mensagem de erro
+            if (errorElement) {
+                errorElement.style.display = 'none';
+            }
+            
+            // Validação básica
+            if (!username || !password) {
+                showError('Preencha todos os campos!');
                 return;
             }
             
-            if (users[username].password !== password) {
-                errorElement.style.display = 'block';
+            // Verificar usuário
+            const user = users[username];
+            if (!user) {
+                showError('Usuário não encontrado!<br>Use: felipe.ruas ou bruna.silva');
+                usernameInput.value = '';
+                passwordInput.value = '';
+                usernameInput.focus();
                 return;
             }
             
-            // Login bem sucedido
-            currentUser = users[username];
+            // Verificar senha
+            if (user.password !== password) {
+                showError('Senha incorreta!<br>Tente novamente.');
+                passwordInput.value = '';
+                passwordInput.focus();
+                return;
+            }
+            
+            // ✅ LOGIN BEM SUCEDIDO
+            console.log('✅ Login bem sucedido para:', user.fullName);
+            currentUser = user;
             
             // Salvar no localStorage
             localStorage.setItem('travelLoggedUser', JSON.stringify(currentUser));
             
             // Mostrar aplicação principal
             showMainApp();
-            initSupabase();
+            loadSavedData();
         }
         
-        // Função de logout
-        function handleLogout() {
-            currentUser = null;
-            localStorage.removeItem('travelLoggedUser');
-            showLogin();
+        // Mostrar erro de login
+        function showError(message) {
+            const errorElement = document.getElementById('login-error');
+            if (errorElement) {
+                errorElement.innerHTML = message;
+                errorElement.style.display = 'block';
+                console.log('❌ Erro de login:', message);
+            }
         }
         
         // Mostrar tela de login
         function showLogin() {
+            console.log('👤 Mostrando tela de login');
             document.getElementById('login-container').style.display = 'flex';
             document.getElementById('main-container').style.display = 'none';
             
-            // Limpar formulário
-            document.getElementById('username').value = '';
-            document.getElementById('password').value = '';
-            document.getElementById('login-error').style.display = 'none';
+            // Limpar campos
+            const usernameInput = document.getElementById('username');
+            const passwordInput = document.getElementById('password');
+            
+            if (usernameInput) usernameInput.value = '';
+            if (passwordInput) passwordInput.value = '';
+            
+            // Focar no primeiro campo
+            setTimeout(() => {
+                if (usernameInput) {
+                    usernameInput.focus();
+                }
+            }, 100);
         }
         
         // Mostrar aplicação principal
         function showMainApp() {
+            console.log('🏠 Mostrando aplicação principal para:', currentUser.fullName);
             document.getElementById('login-container').style.display = 'none';
             document.getElementById('main-container').style.display = 'block';
             
@@ -1722,85 +1117,137 @@
             setupInterface();
         }
         
-        // Atualizar informações do usuário na interface
+        // Atualizar informações do usuário
         function updateUserInfo() {
             if (!currentUser) return;
             
-            document.getElementById('user-avatar').textContent = currentUser.initial;
-            document.getElementById('user-avatar').className = `user-avatar ${currentUser.color}`;
-            document.getElementById('user-fullname').textContent = currentUser.fullName;
-            document.getElementById('user-username').textContent = currentUser.username;
-            document.getElementById('current-user-name').textContent = currentUser.fullName;
+            console.log('👤 Atualizando info do usuário:', currentUser.fullName);
+            
+            const avatar = document.getElementById('user-avatar');
+            const fullName = document.getElementById('user-fullname');
+            const username = document.getElementById('user-username');
+            const currentUserName = document.getElementById('current-user-name');
+            
+            if (avatar) {
+                avatar.textContent = currentUser.initial;
+                avatar.className = `user-avatar ${currentUser.color}`;
+            }
+            
+            if (fullName) fullName.textContent = currentUser.fullName;
+            if (username) username.textContent = currentUser.username;
+            if (currentUserName) currentUserName.textContent = currentUser.fullName;
         }
         
-        // Inicializar Supabase
-        function initSupabase() {
-            if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-                updateConnectionStatus("Conectando ao servidor...", true);
+        // Logout
+        function handleLogout() {
+            console.log('👋 Realizando logout');
+            currentUser = null;
+            localStorage.removeItem('travelLoggedUser');
+            showLogin();
+        }
+        
+        // Carregar dados salvos
+        function loadSavedData() {
+            try {
+                const saved = localStorage.getItem('gramadoTravelActivities');
+                if (saved) {
+                    travelActivities = JSON.parse(saved);
+                    console.log('📂 Dados carregados do localStorage');
+                } else {
+                    console.log('📂 Nenhum dado salvo encontrado, adicionando exemplos');
+                    addExampleActivities();
+                }
                 
-                // Carregar atividades
-                loadActivitiesFromSupabase();
-                setupRealtimeSubscription();
-            } else {
-                updateConnectionStatus("Configure o Supabase para ativar o compartilhamento", false);
+                renderAllActivities();
+                showDayActivities('18');
+                
+            } catch (error) {
+                console.error('❌ Erro ao carregar dados:', error);
+                addExampleActivities();
+                renderAllActivities();
+                showDayActivities('18');
             }
         }
         
-        // Configurar interface da aplicação principal
+        // Adicionar atividades de exemplo
+        function addExampleActivities() {
+            travelActivities["18"] = [
+                {
+                    id: 1,
+                    startTime: "14:00",
+                    endTime: "15:00",
+                    title: "Chegada ao hotel",
+                    desc: "Check-in no hotel Serra Azul",
+                    duration: 1,
+                    createdBy: "felipe.ruas",
+                    authorName: "Felipe Ruas"
+                },
+                {
+                    id: 2,
+                    startTime: "19:00",
+                    endTime: "21:00",
+                    title: "Jantar romântico",
+                    desc: "Restaurante Alpine - Fondue",
+                    duration: 2,
+                    createdBy: "bruna.silva",
+                    authorName: "Bruna Silva"
+                }
+            ];
+            
+            travelActivities["19"] = [
+                {
+                    id: 3,
+                    startTime: "09:00",
+                    endTime: "12:00",
+                    title: "Visita ao Lago Negro",
+                    desc: "Passeio de pedalinho e fotos",
+                    duration: 3,
+                    createdBy: "bruna.silva",
+                    authorName: "Bruna Silva"
+                }
+            ];
+            
+            saveToLocalStorage();
+        }
+        
+        // Salvar no localStorage
+        function saveToLocalStorage() {
+            try {
+                localStorage.setItem('gramadoTravelActivities', JSON.stringify(travelActivities));
+                console.log('💾 Dados salvos no localStorage');
+            } catch (error) {
+                console.error('❌ Erro ao salvar:', error);
+            }
+        }
+        
+        // Configurar interface da aplicação
         function setupInterface() {
+            console.log('⚙️ Configurando interface...');
+            
             // Configurar o formulário de atividade
-            document.getElementById('activity-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                addActivity();
-            });
+            const activityForm = document.getElementById('activity-form');
+            if (activityForm) {
+                activityForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    addActivity();
+                });
+            }
             
             // Validar horários
-            document.getElementById('start-time').addEventListener('change', validateTimeRange);
-            document.getElementById('end-time').addEventListener('change', validateTimeRange);
+            const startTime = document.getElementById('start-time');
+            const endTime = document.getElementById('end-time');
             
-            // Preview de endereço no formulário de adição
-            document.getElementById('preview-address').addEventListener('click', function() {
-                const address = document.getElementById('activity-address').value.trim();
-                if (address) {
-                    openGoogleMaps(address);
-                } else {
-                    alert('Digite um endereço para visualizar no Google Maps');
-                }
-            });
+            if (startTime) {
+                startTime.addEventListener('change', validateTimeRange);
+            }
             
-            // Preview de endereço no modal de edição
-            document.getElementById('edit-preview-address').addEventListener('click', function() {
-                const address = document.getElementById('edit-address').value.trim();
-                if (address) {
-                    openGoogleMaps(address);
-                } else {
-                    alert('Digite um endereço para visualizar no Google Maps');
-                }
-            });
+            if (endTime) {
+                endTime.addEventListener('change', validateTimeRange);
+            }
             
-            // Configurar sistema de abas
-            document.querySelectorAll('.tab-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const tabId = this.getAttribute('data-tab');
-                    
-                    // Ativar botão clicado
-                    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Mostrar conteúdo da aba selecionada
-                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-                    document.getElementById(`tab-${tabId}`).classList.add('active');
-                    
-                    // Se for a aba de timeline, renderizar
-                    if (tabId === 'timeline') {
-                        renderTimeline();
-                    }
-                });
-            });
-            
-            // Configurar botões de seleção de dia na agenda
-            document.querySelectorAll('.day-btn').forEach(btn => {
+            // Configurar botões de seleção de dia
+            const dayButtons = document.querySelectorAll('.day-btn');
+            dayButtons.forEach(btn => {
                 btn.addEventListener('click', function() {
                     const day = this.getAttribute('data-day');
                     
@@ -1813,199 +1260,7 @@
                 });
             });
             
-            // Configurar botões de seleção de dia na timeline
-            document.querySelectorAll('.timeline-day-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const day = this.getAttribute('data-day');
-                    
-                    // Ativar botão clicado
-                    document.querySelectorAll('.timeline-day-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Renderizar timeline do dia selecionado
-                    renderTimeline(day);
-                });
-            });
-            
-            // Configurar modal de edição
-            document.getElementById('cancel-edit').addEventListener('click', function() {
-                closeEditModal();
-            });
-            
-            document.getElementById('edit-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                saveEditedActivity();
-            });
-        }
-        
-        // Configurar subscription em tempo real
-        function setupRealtimeSubscription() {
-            if (!supabase) return;
-            
-            const channel = supabase
-                .channel('travel-activities-changes')
-                .on(
-                    'postgres_changes',
-                    {
-                        event: '*',
-                        schema: 'public',
-                        table: 'travel_activities'
-                    },
-                    (payload) => {
-                        console.log('Mudança recebida em tempo real:', payload);
-                        loadActivitiesFromSupabase();
-                        showRealtimeNotification(payload);
-                    }
-                )
-                .subscribe();
-        }
-        
-        // Mostrar notificação de mudança em tempo real
-        function showRealtimeNotification(payload) {
-            let message = '';
-            let user = payload.new ? payload.new.created_by : 'Outro usuário';
-            let userName = users[user] ? users[user].fullName : user;
-            
-            if (payload.eventType === 'INSERT') {
-                message = `${userName} adicionou: "${payload.new.title}"`;
-            } else if (payload.eventType === 'UPDATE') {
-                message = `${userName} atualizou uma atividade`;
-            } else if (payload.eventType === 'DELETE') {
-                message = `${userName} removeu uma atividade`;
-            }
-            
-            // Criar notificação
-            const notification = document.createElement('div');
-            notification.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                background: #4CAF50;
-                color: white;
-                padding: 15px;
-                border-radius: 8px;
-                box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                z-index: 1000;
-                max-width: 300px;
-                animation: slideIn 0.3s ease-out;
-            `;
-            
-            notification.innerHTML = `
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <i class="fas fa-bell" style="font-size: 1.2rem;"></i>
-                    <div>
-                        <strong>Atualização em tempo real</strong>
-                        <div style="font-size: 0.9rem; margin-top: 5px;">${message}</div>
-                    </div>
-                </div>
-            `;
-            
-            document.body.appendChild(notification);
-            
-            // Remover após 5 segundos
-            setTimeout(() => {
-                notification.style.animation = 'slideOut 0.3s ease-out';
-                setTimeout(() => {
-                    if (notification.parentNode) {
-                        notification.parentNode.removeChild(notification);
-                    }
-                }, 300);
-            }, 5000);
-        }
-        
-        // Atualizar status da conexão
-        function updateConnectionStatus(message, isConnected) {
-            const statusDot = document.getElementById('status-dot');
-            const statusText = document.getElementById('status-text');
-            
-            if (statusText) statusText.textContent = message;
-            if (statusDot) {
-                statusDot.className = isConnected ? 'status-dot status-connected' : 'status-dot status-disconnected';
-            }
-        }
-        
-        // Carregar atividades do Supabase
-        async function loadActivitiesFromSupabase() {
-            if (!supabase) {
-                loadFromLocalStorage();
-                return;
-            }
-            
-            try {
-                updateConnectionStatus("Carregando atividades...", true);
-                
-                const { data, error } = await supabase
-                    .from('travel_activities')
-                    .select('*')
-                    .order('start_time', { ascending: true });
-                
-                if (error) throw error;
-                
-                // Reorganizar atividades por dia
-                travelActivities = { "18": [], "19": [], "20": [], "21": [] };
-                
-                if (data) {
-                    data.forEach(activity => {
-                        const day = activity.day_number.toString();
-                        if (travelActivities[day]) {
-                            travelActivities[day].push({
-                                id: activity.id,
-                                startTime: activity.start_time,
-                                endTime: activity.end_time,
-                                title: activity.title,
-                                desc: activity.description,
-                                cost: activity.cost || 0,
-                                address: activity.address || '',
-                                duration: activity.duration,
-                                createdBy: activity.created_by,
-                                authorName: users[activity.created_by] ? users[activity.created_by].fullName : activity.created_by,
-                                startHour: parseInt(activity.start_time.split(':')[0])
-                            });
-                        }
-                    });
-                }
-                
-                renderAllActivities();
-                updateDayTotals();
-                const activeDay = document.querySelector('.day-btn.active')?.getAttribute('data-day') || '18';
-                showDayActivities(activeDay);
-                
-                // Renderizar timeline se estiver ativa
-                if (document.querySelector('.tab-btn[data-tab="timeline"]').classList.contains('active')) {
-                    renderTimeline(activeDay);
-                }
-                
-                updateConnectionStatus("Conectado • Atualizações em tempo real", true);
-                
-            } catch (error) {
-                console.error('Erro ao carregar atividades:', error);
-                updateConnectionStatus("Erro ao conectar. Usando modo offline.", false);
-                loadFromLocalStorage();
-            }
-        }
-        
-        // Carregar do localStorage (fallback)
-        function loadFromLocalStorage() {
-            try {
-                const savedActivities = localStorage.getItem('gramadoTravelActivities');
-                if (savedActivities) {
-                    const parsedData = JSON.parse(savedActivities);
-                    if (parsedData && typeof parsedData === 'object') {
-                        travelActivities = parsedData;
-                        renderAllActivities();
-                        updateDayTotals();
-                        const activeDay = document.querySelector('.day-btn.active')?.getAttribute('data-day') || '18';
-                        showDayActivities(activeDay);
-                        
-                        // Renderizar timeline se estiver ativa
-                        if (document.querySelector('.tab-btn[data-tab="timeline"]').classList.contains('active')) {
-                            renderTimeline(activeDay);
-                        }
-                    }
-                }
-            } catch (error) {
-                console.error('Erro ao carregar do localStorage:', error);
-            }
+            console.log('✅ Interface configurada com sucesso');
         }
         
         // Função para validar intervalo de tempo
@@ -2052,46 +1307,14 @@
             return `${hours}h${minutes}min`;
         }
         
-        // Formatar valor em reais
-        function formatCurrency(value) {
-            if (!value) value = 0;
-            return new Intl.NumberFormat('pt-BR', {
-                style: 'currency',
-                currency: 'BRL'
-            }).format(value);
-        }
-        
         // Calcular tempo total de atividades do dia
         function calculateDayTotal(day) {
             const activities = travelActivities[day] || [];
             return activities.reduce((total, activity) => total + activity.duration, 0);
         }
         
-        // Calcular custo total do dia
-        function calculateDayCost(day) {
-            const activities = travelActivities[day] || [];
-            return activities.reduce((total, activity) => total + (activity.cost || 0), 0);
-        }
-        
-        // Atualizar totais dos dias
-        function updateDayTotals() {
-            ['18', '19', '20', '21'].forEach(day => {
-                const totalCost = calculateDayCost(day);
-                const costElement = document.getElementById(`day-${day}-cost`);
-                if (costElement) {
-                    costElement.textContent = formatCurrency(totalCost);
-                }
-            });
-        }
-        
-        // Abrir Google Maps com endereço
-        function openGoogleMaps(address) {
-            const encodedAddress = encodeURIComponent(address);
-            window.open(`https://www.google.com/maps/search/?api=1&query=${encodedAddress}`, '_blank');
-        }
-        
-        // Adicionar atividade ao Supabase
-        async function addActivity() {
+        // Adicionar atividade
+        function addActivity() {
             if (!currentUser) {
                 alert('Você precisa estar logado para adicionar atividades.');
                 return;
@@ -2102,8 +1325,6 @@
             const endTime = document.getElementById('end-time').value;
             const title = document.getElementById('activity-title').value.trim();
             const desc = document.getElementById('activity-desc').value.trim();
-            const cost = parseFloat(document.getElementById('activity-cost').value) || 0;
-            const address = document.getElementById('activity-address').value.trim();
             
             if (!day || !startTime || !endTime || !title) {
                 alert('Por favor, preencha todos os campos obrigatórios.');
@@ -2117,249 +1338,51 @@
             
             const duration = calculateDuration(startTime, endTime);
             
-            try {
-                updateConnectionStatus("Salvando atividade...", true);
-                
-                if (supabase) {
-                    // Inserir no Supabase
-                    const { data, error } = await supabase
-                        .from('travel_activities')
-                        .insert([
-                            {
-                                day_number: parseInt(day),
-                                start_time: startTime,
-                                end_time: endTime,
-                                title: title,
-                                description: desc,
-                                cost: cost,
-                                address: address,
-                                duration: duration,
-                                created_by: currentUser.username
-                            }
-                        ])
-                        .select();
-                    
-                    if (error) throw error;
-                    
-                    // A subscription irá atualizar automaticamente
-                }
-                
-                // Fallback: salvar localmente
-                saveActivityLocally(day, startTime, endTime, title, desc, cost, address, duration);
-                
-                // Limpar formulário
-                document.getElementById('activity-form').reset();
-                
-                updateConnectionStatus("Atividade salva! • Conectado", true);
-                
-            } catch (error) {
-                console.error('Erro ao salvar atividade:', error);
-                saveActivityLocally(day, startTime, endTime, title, desc, cost, address, duration);
+            // Adicionar à lista
+            if (!travelActivities[day]) {
+                travelActivities[day] = [];
             }
-        }
-        
-        // Salvar atividade localmente (fallback)
-        function saveActivityLocally(day, startTime, endTime, title, desc, cost, address, duration) {
-            if (!travelActivities[day]) travelActivities[day] = [];
             
-            const activityId = Date.now();
-            travelActivities[day].push({
-                id: activityId,
+            const newActivity = {
+                id: Date.now(),
                 startTime: startTime,
                 endTime: endTime,
                 title: title,
                 desc: desc,
-                cost: cost,
-                address: address,
                 duration: duration,
                 createdBy: currentUser.username,
-                authorName: currentUser.fullName,
-                startHour: parseInt(startTime.split(':')[0])
-            });
+                authorName: currentUser.fullName
+            };
             
+            travelActivities[day].push(newActivity);
             travelActivities[day].sort((a, b) => a.startTime.localeCompare(b.startTime));
-            saveToLocalStorage();
-            renderDayActivities(day);
-            updateDayTotals();
             
+            // Salvar
+            saveToLocalStorage();
+            
+            // Atualizar interface
+            renderDayActivities(day);
             const activeDay = document.querySelector('.day-btn.active')?.getAttribute('data-day');
             if (day === activeDay) showDayActivities(activeDay);
             
-            // Renderizar timeline se estiver ativa
-            if (document.querySelector('.tab-btn[data-tab="timeline"]').classList.contains('active')) {
-                renderTimeline(day);
-            }
-        }
-        
-        // Abrir modal de edição
-        function openEditModal(activityId, day) {
-            const activity = travelActivities[day].find(a => a.id === activityId);
-            if (!activity) return;
+            // Limpar formulário
+            document.getElementById('activity-form').reset();
             
-            editingActivity = { id: activityId, day: day };
+            // Mostrar mensagem
+            alert('Atividade adicionada com sucesso!');
             
-            // Preencher formulário de edição
-            document.getElementById('edit-id').value = activityId;
-            document.getElementById('edit-day').value = day;
-            document.getElementById('edit-day-select').value = day;
-            document.getElementById('edit-start-time').value = activity.startTime;
-            document.getElementById('edit-end-time').value = activity.endTime;
-            document.getElementById('edit-title').value = activity.title;
-            document.getElementById('edit-desc').value = activity.desc || '';
-            document.getElementById('edit-cost').value = activity.cost || 0;
-            document.getElementById('edit-address').value = activity.address || '';
-            
-            // Mostrar modal
-            document.getElementById('edit-modal').style.display = 'flex';
-        }
-        
-        // Fechar modal de edição
-        function closeEditModal() {
-            document.getElementById('edit-modal').style.display = 'none';
-            editingActivity = null;
-            document.getElementById('edit-form').reset();
-        }
-        
-        // Salvar atividade editada
-        async function saveEditedActivity() {
-            const activityId = parseInt(document.getElementById('edit-id').value);
-            const oldDay = document.getElementById('edit-day').value;
-            const newDay = document.getElementById('edit-day-select').value;
-            const startTime = document.getElementById('edit-start-time').value;
-            const endTime = document.getElementById('edit-end-time').value;
-            const title = document.getElementById('edit-title').value.trim();
-            const desc = document.getElementById('edit-desc').value.trim();
-            const cost = parseFloat(document.getElementById('edit-cost').value) || 0;
-            const address = document.getElementById('edit-address').value.trim();
-            
-            if (!title) {
-                alert('O título da atividade é obrigatório.');
-                return;
-            }
-            
-            const duration = calculateDuration(startTime, endTime);
-            
-            try {
-                if (supabase) {
-                    // Atualizar no Supabase
-                    const { error } = await supabase
-                        .from('travel_activities')
-                        .update({
-                            day_number: parseInt(newDay),
-                            start_time: startTime,
-                            end_time: endTime,
-                            title: title,
-                            description: desc,
-                            cost: cost,
-                            address: address,
-                            duration: duration
-                        })
-                        .eq('id', activityId);
-                    
-                    if (error) throw error;
-                }
-                
-                // Atualizar localmente
-                updateActivityLocally(activityId, oldDay, newDay, startTime, endTime, title, desc, cost, address, duration);
-                
-                closeEditModal();
-                updateConnectionStatus("Atividade atualizada! • Conectado", true);
-                
-            } catch (error) {
-                console.error('Erro ao atualizar atividade:', error);
-                updateActivityLocally(activityId, oldDay, newDay, startTime, endTime, title, desc, cost, address, duration);
-                closeEditModal();
-            }
-        }
-        
-        // Atualizar atividade localmente
-        function updateActivityLocally(activityId, oldDay, newDay, startTime, endTime, title, desc, cost, address, duration) {
-            // Remover da lista antiga
-            travelActivities[oldDay] = travelActivities[oldDay].filter(a => a.id !== activityId);
-            
-            // Adicionar à nova lista
-            const activity = {
-                id: activityId,
-                startTime: startTime,
-                endTime: endTime,
-                title: title,
-                desc: desc,
-                cost: cost,
-                address: address,
-                duration: duration,
-                createdBy: currentUser.username,
-                authorName: currentUser.fullName,
-                startHour: parseInt(startTime.split(':')[0])
-            };
-            
-            if (!travelActivities[newDay]) travelActivities[newDay] = [];
-            travelActivities[newDay].push(activity);
-            
-            // Ordenar atividades
-            travelActivities[oldDay].sort((a, b) => a.startTime.localeCompare(b.startTime));
-            travelActivities[newDay].sort((a, b) => a.startTime.localeCompare(b.startTime));
-            
-            saveToLocalStorage();
-            renderDayActivities(oldDay);
-            renderDayActivities(newDay);
-            updateDayTotals();
-            
-            const activeDay = document.querySelector('.day-btn.active')?.getAttribute('data-day');
-            if (oldDay === activeDay || newDay === activeDay) {
-                showDayActivities(activeDay);
-            }
-            
-            // Renderizar timeline se estiver ativa
-            if (document.querySelector('.tab-btn[data-tab="timeline"]').classList.contains('active')) {
-                const timelineDay = document.querySelector('.timeline-day-btn.active')?.getAttribute('data-day');
-                if (oldDay === timelineDay || newDay === timelineDay) {
-                    renderTimeline(timelineDay);
-                }
-            }
+            console.log('✅ Atividade adicionada:', newActivity.title);
         }
         
         // Remover atividade
-        async function removeActivity(activityId, day) {
+        function removeActivity(activityId, day) {
             if (!confirm('Tem certeza que deseja remover esta atividade?')) return;
             
-            try {
-                if (supabase) {
-                    const { error } = await supabase
-                        .from('travel_activities')
-                        .delete()
-                        .eq('id', activityId);
-                    
-                    if (error) throw error;
-                }
-            } catch (error) {
-                console.error('Erro ao remover atividade:', error);
-                removeActivityLocally(activityId, day);
-            }
-        }
-        
-        // Remover atividade localmente (fallback)
-        function removeActivityLocally(activityId, day) {
             travelActivities[day] = travelActivities[day].filter(activity => activity.id !== activityId);
             saveToLocalStorage();
             renderDayActivities(day);
-            updateDayTotals();
             
-            // Renderizar timeline se estiver ativa
-            if (document.querySelector('.tab-btn[data-tab="timeline"]').classList.contains('active')) {
-                const timelineDay = document.querySelector('.timeline-day-btn.active')?.getAttribute('data-day');
-                if (day === timelineDay) {
-                    renderTimeline(timelineDay);
-                }
-            }
-        }
-        
-        // Salvar no localStorage (fallback)
-        function saveToLocalStorage() {
-            try {
-                localStorage.setItem('gramadoTravelActivities', JSON.stringify(travelActivities));
-            } catch (error) {
-                console.error('Erro ao salvar no localStorage:', error);
-            }
+            console.log('🗑️ Atividade removida:', activityId);
         }
         
         // Renderizar atividades de um dia
@@ -2375,15 +1398,22 @@
             const totalHours = calculateDayTotal(day);
             
             // Atualizar contadores
-            if (dayCounter) dayCounter.textContent = `${activitiesList.length} atividade${activitiesList.length !== 1 ? 's' : ''}`;
-            if (dayTotalTime) dayTotalTime.textContent = `Total: ${formatDuration(totalHours)}`;
+            if (dayCounter) {
+                dayCounter.textContent = `${activitiesList.length} atividade${activitiesList.length !== 1 ? 's' : ''}`;
+            }
+            
+            if (dayTotalTime) {
+                dayTotalTime.textContent = `Total: ${formatDuration(totalHours)}`;
+            }
             
             // Limpar atividades existentes
             container.querySelectorAll('.activity-card').forEach(activity => activity.remove());
             
             // Remover mensagem de "nenhuma atividade"
             const noActivitiesMsg = container.querySelector('.no-activities');
-            if (noActivitiesMsg) noActivitiesMsg.remove();
+            if (noActivitiesMsg) {
+                noActivitiesMsg.remove();
+            }
             
             // Adicionar atividades
             if (activitiesList.length === 0) {
@@ -2397,8 +1427,18 @@
                     const activityCard = document.createElement('div');
                     activityCard.className = `activity-card ${userColor}`;
                     
-                    // Construir HTML da atividade
-                    let activityHTML = `
+                    let deleteButton = '';
+                    if (activity.createdBy === currentUser.username) {
+                        deleteButton = `
+                            <div class="activity-actions">
+                                <button class="btn-delete" onclick="removeActivity(${activity.id}, '${day}')">
+                                    <i class="fas fa-trash"></i> Remover
+                                </button>
+                            </div>
+                        `;
+                    }
+                    
+                    activityCard.innerHTML = `
                         <div class="activity-header">
                             <div>
                                 <div class="activity-time">
@@ -2406,67 +1446,19 @@
                                     <span class="activity-duration">
                                         <i class="fas fa-hourglass-half"></i> ${formatDuration(activity.duration)}
                                     </span>
-                    `;
-                    
-                    // Adicionar custo se existir
-                    if (activity.cost && activity.cost > 0) {
-                        activityHTML += `
-                                    <span class="activity-cost">
-                                        <i class="fas fa-money-bill-wave"></i> ${formatCurrency(activity.cost)}
-                                    </span>
-                        `;
-                    }
-                    
-                    activityHTML += `
                                 </div>
                             </div>
                             <div class="activity-title">${activity.title}</div>
                         </div>
-                    `;
-                    
-                    // Adicionar descrição se existir
-                    if (activity.desc) {
-                        activityHTML += `<div class="activity-desc">${activity.desc}</div>`;
-                    }
-                    
-                    // Adicionar endereço se existir
-                    if (activity.address) {
-                        activityHTML += `
-                            <div class="activity-address" onclick="openGoogleMaps('${activity.address.replace(/'/g, "\\'")}')">
-                                <div class="address-text">
-                                    <i class="fas fa-map-marker-alt"></i> ${activity.address}
-                                </div>
-                                <div class="maps-link">
-                                    Ver no Maps <i class="fas fa-external-link-alt"></i>
-                                </div>
-                            </div>
-                        `;
-                    }
-                    
-                    activityHTML += `
+                        ${activity.desc ? `<div class="activity-desc">${activity.desc}</div>` : ''}
                         <div class="activity-author">
                             <div class="author-avatar ${userColor}">${activity.createdBy === 'felipe.ruas' ? 'F' : 'B'}</div>
                             <div class="author-name">
                                 Adicionado por: <strong>${activity.authorName || activity.createdBy}</strong>
                             </div>
                         </div>
+                        ${deleteButton}
                     `;
-                    
-                    // Adicionar botões de ação se for o criador
-                    if (activity.createdBy === currentUser.username) {
-                        activityHTML += `
-                        <div class="activity-actions">
-                            <button class="btn-edit" onclick="openEditModal(${activity.id}, '${day}')">
-                                <i class="fas fa-edit"></i> Editar
-                            </button>
-                            <button class="btn-delete" onclick="removeActivity(${activity.id}, '${day}')">
-                                <i class="fas fa-trash"></i> Remover
-                            </button>
-                        </div>
-                        `;
-                    }
-                    
-                    activityCard.innerHTML = activityHTML;
                     container.appendChild(activityCard);
                 });
             }
@@ -2474,143 +1466,23 @@
         
         // Renderizar todas as atividades
         function renderAllActivities() {
-            ['18', '19', '20', '21'].forEach(day => renderDayActivities(day));
+            ['18', '19', '20', '21'].forEach(day => {
+                renderDayActivities(day);
+            });
         }
         
         // Mostrar atividades de um dia
         function showDayActivities(day) {
+            // Esconder todos os dias
             document.querySelectorAll('.day-activities').forEach(div => {
                 div.style.display = 'none';
             });
             
+            // Mostrar o dia selecionado
             const dayElement = document.getElementById(`day-${day}`);
-            if (dayElement) dayElement.style.display = 'block';
-        }
-        
-        // Renderizar timeline por horário
-        function renderTimeline(day = null) {
-            if (!day) {
-                day = document.querySelector('.timeline-day-btn.active')?.getAttribute('data-day') || '18';
+            if (dayElement) {
+                dayElement.style.display = 'block';
             }
-            
-            const timelineGrid = document.getElementById('timeline-grid');
-            if (!timelineGrid) return;
-            
-            timelineGrid.innerHTML = '';
-            
-            const activitiesList = travelActivities[day] || [];
-            const dayNames = {
-                '18': '18 de Junho - Chegada a Gramado',
-                '19': '19 de Junho - Segundo dia',
-                '20': '20 de Junho - Terceiro dia',
-                '21': '21 de Junho - Partida de Gramado'
-            };
-            
-            // Calcular custo total do dia
-            const dayCost = calculateDayCost(day);
-            
-            // Criar linha para cada horário
-            timelineHours.forEach(hour => {
-                const hourRow = document.createElement('div');
-                hourRow.className = 'timeline-hour-row';
-                
-                // Label do horário
-                const hourLabel = document.createElement('div');
-                hourLabel.className = 'timeline-hour-label';
-                hourLabel.textContent = hour;
-                hourRow.appendChild(hourLabel);
-                
-                // Conteúdo do horário
-                const hourContent = document.createElement('div');
-                hourContent.className = 'timeline-hour-content';
-                
-                // Verificar se há atividade neste horário
-                const activityInHour = activitiesList.find(activity => {
-                    const activityStartHour = parseInt(activity.startTime.split(':')[0]);
-                    return activityStartHour === parseInt(hour.split(':')[0]);
-                });
-                
-                if (activityInHour) {
-                    const userColor = users[activityInHour.createdBy] ? users[activityInHour.createdBy].color : 'felipe';
-                    const activityElement = document.createElement('div');
-                    activityElement.className = `timeline-activity ${userColor}`;
-                    
-                    let activityHTML = `
-                        <div class="timeline-activity-header">
-                            <div class="timeline-activity-title">${activityInHour.title}</div>
-                            <div class="timeline-activity-time">
-                                <i class="far fa-clock"></i> ${activityInHour.startTime} - ${activityInHour.endTime}
-                    `;
-                    
-                    // Adicionar custo se existir
-                    if (activityInHour.cost && activityInHour.cost > 0) {
-                        activityHTML += `
-                                <span class="timeline-activity-cost">
-                                    <i class="fas fa-money-bill-wave"></i> ${formatCurrency(activityInHour.cost)}
-                                </span>
-                        `;
-                    }
-                    
-                    activityHTML += `
-                            </div>
-                        </div>
-                    `;
-                    
-                    // Adicionar descrição se existir
-                    if (activityInHour.desc) {
-                        activityHTML += `<div class="timeline-activity-desc">${activityInHour.desc}</div>`;
-                    }
-                    
-                    // Adicionar endereço se existir
-                    if (activityInHour.address) {
-                        activityHTML += `
-                            <div class="timeline-activity-address" onclick="openGoogleMaps('${activityInHour.address.replace(/'/g, "\\'")}')">
-                                <div class="timeline-address-text">
-                                    <i class="fas fa-map-marker-alt"></i> ${activityInHour.address}
-                                </div>
-                                <div class="timeline-maps-link">
-                                    Ver no Maps <i class="fas fa-external-link-alt"></i>
-                                </div>
-                            </div>
-                        `;
-                    }
-                    
-                    activityHTML += `
-                        <div class="timeline-activity-author">
-                            <div class="timeline-author-avatar ${userColor}">${activityInHour.createdBy === 'felipe.ruas' ? 'F' : 'B'}</div>
-                            <div>${activityInHour.authorName || activityInHour.createdBy}</div>
-                        </div>
-                    `;
-                    
-                    activityElement.innerHTML = activityHTML;
-                    hourContent.appendChild(activityElement);
-                } else {
-                    hourContent.classList.add('empty');
-                    hourContent.textContent = 'Nenhuma atividade alocada neste horário';
-                }
-                
-                hourRow.appendChild(hourContent);
-                timelineGrid.appendChild(hourRow);
-            });
-            
-            // Adicionar informação sobre o dia
-            const dayInfo = document.createElement('div');
-            dayInfo.style.cssText = `
-                margin-top: 20px;
-                padding: 15px;
-                background-color: #f0f7ff;
-                border-radius: 8px;
-                font-size: 0.95rem;
-                color: #666;
-                text-align: center;
-            `;
-            dayInfo.innerHTML = `
-                <strong>${dayNames[day]}</strong> - 
-                ${activitiesList.length} atividade${activitiesList.length !== 1 ? 's' : ''} • 
-                Total: ${formatDuration(calculateDayTotal(day))} • 
-                Custo total: <span style="color: var(--money); font-weight: 600;">${formatCurrency(dayCost)}</span>
-            `;
-            timelineGrid.appendChild(dayInfo);
         }
     </script>
 </body>
