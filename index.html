@@ -47,7 +47,7 @@
             border-radius: 15px;
             padding: 40px;
             width: 100%;
-            max-width: 450px;
+            max-width: 400px;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
             text-align: center;
         }
@@ -144,9 +144,27 @@
             color: var(--primary);
         }
         
+        .login-info ul {
+            list-style: none;
+            text-align: left;
+        }
+        
+        .login-info li {
+            margin-bottom: 5px;
+            padding-left: 20px;
+            position: relative;
+        }
+        
+        .login-info li:before {
+            content: "•";
+            color: var(--primary);
+            position: absolute;
+            left: 0;
+        }
+        
         .user-credentials {
             display: flex;
-            gap: 15px;
+            gap: 20px;
             margin-top: 15px;
             flex-wrap: wrap;
             justify-content: center;
@@ -155,9 +173,9 @@
         .credential-card {
             background: white;
             border-radius: 8px;
-            padding: 12px;
+            padding: 10px;
             flex: 1;
-            min-width: 160px;
+            min-width: 150px;
             border: 2px solid transparent;
             transition: all 0.3s;
         }
@@ -172,64 +190,13 @@
         
         .credential-card h5 {
             font-size: 0.9rem;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
         
         .credential-card p {
             font-size: 0.8rem;
             color: #666;
             margin-bottom: 3px;
-        }
-        
-        /* Configuração do Supabase */
-        .config-section {
-            background-color: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 15px;
-            border-radius: 8px;
-            margin-top: 20px;
-            text-align: left;
-        }
-        
-        .config-section h5 {
-            color: #856404;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        .config-inputs {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin: 15px 0;
-        }
-        
-        .config-inputs input {
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 5px;
-            font-size: 14px;
-        }
-        
-        .btn-config {
-            background-color: #28a745;
-            color: white;
-            border: none;
-            padding: 10px 15px;
-            border-radius: 5px;
-            cursor: pointer;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-            justify-content: center;
-        }
-        
-        .btn-config:hover {
-            background-color: #218838;
         }
         
         /* Estilos principais (quando logado) */
@@ -338,17 +305,10 @@
         
         .status-connected {
             background-color: var(--success);
-            animation: pulse 2s infinite;
         }
         
         .status-disconnected {
             background-color: var(--accent);
-        }
-        
-        @keyframes pulse {
-            0% { opacity: 1; }
-            50% { opacity: 0.6; }
-            100% { opacity: 1; }
         }
         
         .main-container {
@@ -739,6 +699,17 @@
         .sync-indicator {
             animation: pulse 2s infinite;
         }
+        
+        @keyframes pulse {
+            0% { opacity: 0.6; }
+            50% { opacity: 1; }
+            100% { opacity: 0.6; }
+        }
+        
+        /* Ajustes para melhor visualização */
+        .form-group input[type="text"] {
+            margin-top: 5px;
+        }
     </style>
 </head>
 <body>
@@ -747,7 +718,7 @@
         <div class="login-box">
             <div class="login-logo">
                 <h1><i class="fas fa-plane"></i> Viagem Compartilhada</h1>
-                <p>Gramado 2026 - Sistema Compartilhado</p>
+                <p>Gramado 2026 - Sistema Compartilhado em Tempo Real</p>
             </div>
             
             <form class="login-form" id="login-form">
@@ -786,24 +757,6 @@
                     </div>
                 </div>
             </div>
-            
-            <div class="config-section" id="config-section">
-                <h5><i class="fas fa-cog"></i> Configuração do Supabase</h5>
-                <p style="font-size: 0.8rem; margin-bottom: 10px;">Para ativar o compartilhamento em tempo real, configure suas credenciais do Supabase:</p>
-                
-                <div class="config-inputs">
-                    <input type="text" id="supabase-url" placeholder="URL do Supabase (https://...)" value="https://seu-projeto.supabase.co">
-                    <input type="text" id="supabase-key" placeholder="Chave Anônima do Supabase" value="sua-chave-anon-publica">
-                </div>
-                
-                <button class="btn-config" id="btn-config">
-                    <i class="fas fa-save"></i> Salvar Configuração
-                </button>
-                
-                <p style="font-size: 0.75rem; margin-top: 10px; color: #666;">
-                    <i class="fas fa-lightbulb"></i> Dica: Crie uma conta gratuita em supabase.com
-                </p>
-            </div>
         </div>
     </div>
     
@@ -827,7 +780,7 @@
             
             <div class="connection-status" id="connection-status">
                 <span class="status-dot status-disconnected" id="status-dot"></span>
-                <span id="status-text">Conectando ao Supabase...</span>
+                <span id="status-text">Conectando ao servidor...</span>
             </div>
         </header>
         
@@ -837,7 +790,7 @@
                 <h2><i class="fas fa-plus-circle"></i> Adicionar Atividade</h2>
                 <div class="realtime-notice">
                     <i class="fas fa-sync-alt sync-indicator"></i>
-                    <span id="sync-status">Conectando ao servidor...</span>
+                    <span id="sync-status">Conectando ao Supabase...</span>
                 </div>
                 
                 <form id="activity-form">
@@ -990,10 +943,10 @@
     </div>
 
     <script>
-        // Configuração do Supabase
-        let SUPABASE_URL = '';
-        let SUPABASE_ANON_KEY = '';
-        let supabase = null;
+        // ==================== CONFIGURAÇÃO DO SUPABASE ====================
+        // SUAS CREDENCIAIS JÁ ESTÃO CONFIGURADAS AQUI (HARDCODED)
+        const SUPABASE_URL = 'https://forpfassxqfjwqhaotod.supabase.co';
+        const SUPABASE_ANON_KEY = 'sb_publishable_jYYdY6U6W7CnUCHJPcyu-Q_NGN-S3u5';
         
         // Dados dos usuários
         const users = {
@@ -1017,17 +970,16 @@
         
         // Estado da aplicação
         let currentUser = null;
+        let supabase = null;
         let travelActivities = {
             "18": [], "19": [], "20": [], "21": []
         };
         let realtimeSubscription = null;
         
-        // Inicializar
+        // ==================== INICIALIZAÇÃO ====================
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🚀 Sistema de Viagem carregado!');
-            
-            // Carregar configuração salva
-            loadConfig();
+            console.log('🔗 Supabase configurado:', SUPABASE_URL);
             
             // Verificar se já está logado
             const savedUser = localStorage.getItem('travelLoggedUser');
@@ -1065,15 +1017,6 @@
                 });
             }
             
-            // Configurar botão de configuração
-            const configBtn = document.getElementById('btn-config');
-            if (configBtn) {
-                configBtn.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    saveConfig();
-                });
-            }
-            
             // Configurar logout
             const logoutBtn = document.getElementById('btn-logout');
             if (logoutBtn) {
@@ -1084,65 +1027,12 @@
             }
         });
         
-        // Carregar configuração
-        function loadConfig() {
-            SUPABASE_URL = localStorage.getItem('supabase_url') || 'https://seu-projeto.supabase.co';
-            SUPABASE_ANON_KEY = localStorage.getItem('supabase_key') || 'sua-chave-anon-publica';
-            
-            // Preencher campos
-            document.getElementById('supabase-url').value = SUPABASE_URL;
-            document.getElementById('supabase-key').value = SUPABASE_ANON_KEY;
-            
-            console.log('⚙️ Configuração carregada:', { 
-                url: SUPABASE_URL.substring(0, 30) + '...',
-                key: SUPABASE_ANON_KEY.substring(0, 10) + '...'
-            });
-        }
-        
-        // Salvar configuração
-        function saveConfig() {
-            const url = document.getElementById('supabase-url').value.trim();
-            const key = document.getElementById('supabase-key').value.trim();
-            
-            if (!url || !key) {
-                alert('Preencha ambos os campos!');
-                return;
-            }
-            
-            if (!url.startsWith('https://')) {
-                alert('A URL deve começar com https://');
-                return;
-            }
-            
-            localStorage.setItem('supabase_url', url);
-            localStorage.setItem('supabase_key', key);
-            
-            SUPABASE_URL = url;
-            SUPABASE_ANON_KEY = key;
-            
-            alert('Configuração salva! Reiniciando conexão...');
-            
-            // Reinicializar Supabase se estiver logado
-            if (currentUser) {
-                initSupabase();
-            }
-        }
+        // ==================== FUNÇÕES DO SUPABASE ====================
         
         // Inicializar Supabase
         function initSupabase() {
-            if (!SUPABASE_URL || !SUPABASE_ANON_KEY || 
-                SUPABASE_URL === 'https://seu-projeto.supabase.co' || 
-                SUPABASE_ANON_KEY === 'sua-chave-anon-publica') {
-                
-                console.log('⚠️ Supabase não configurado, usando modo local');
-                updateConnectionStatus("Modo Local - Configure o Supabase para compartilhamento", false);
-                document.getElementById('sync-status').textContent = "Modo Local";
-                document.getElementById('footer-mode').textContent = "Modo Local - Configure o Supabase para compartilhamento";
-                return;
-            }
-            
             try {
-                console.log('🔗 Inicializando Supabase...');
+                console.log('🔗 Inicializando Supabase com suas credenciais...');
                 supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                 
                 // Testar conexão
@@ -1159,7 +1049,7 @@
             if (!supabase) return;
             
             try {
-                updateConnectionStatus("Testando conexão com Supabase...", true);
+                updateConnectionStatus("Conectando ao Supabase...", true);
                 
                 // Teste simples de conexão
                 const { data, error } = await supabase
@@ -1173,7 +1063,7 @@
                     // Verificar se é erro de tabela não existente
                     if (error.message.includes('relation') && error.message.includes('does not exist')) {
                         updateConnectionStatus("Tabela não encontrada. Crie a tabela no Supabase.", false);
-                        alert('Erro: Tabela não encontrada no Supabase.\n\nExecute o SQL no SQL Editor do Supabase:\n\nCREATE TABLE travel_activities (\n  id BIGSERIAL PRIMARY KEY,\n  day_number INTEGER NOT NULL,\n  start_time VARCHAR(5) NOT NULL,\n  end_time VARCHAR(5) NOT NULL,\n  title TEXT NOT NULL,\n  description TEXT,\n  duration NUMERIC(4,2),\n  created_by VARCHAR(50),\n  created_at TIMESTAMP DEFAULT NOW()\n);');
+                        alert('⚠️ ATENÇÃO: Tabela não encontrada no Supabase!\n\nPara criar a tabela, vá no SQL Editor do Supabase e execute:\n\nCREATE TABLE travel_activities (\n  id BIGSERIAL PRIMARY KEY,\n  day_number INTEGER NOT NULL,\n  start_time VARCHAR(5) NOT NULL,\n  end_time VARCHAR(5) NOT NULL,\n  title TEXT NOT NULL,\n  description TEXT,\n  duration NUMERIC(4,2),\n  created_by VARCHAR(50),\n  created_at TIMESTAMP DEFAULT NOW()\n);\n\nALTER TABLE travel_activities ENABLE ROW LEVEL SECURITY;\nCREATE POLICY "Permitir todas as operações" ON travel_activities FOR ALL USING (true);');
                     } else {
                         updateConnectionStatus("Erro na conexão: " + error.message, false);
                     }
@@ -1290,16 +1180,7 @@
             }, 5000);
         }
         
-        // Atualizar status da conexão
-        function updateConnectionStatus(message, isConnected) {
-            const statusDot = document.getElementById('status-dot');
-            const statusText = document.getElementById('status-text');
-            
-            if (statusText) statusText.textContent = message;
-            if (statusDot) {
-                statusDot.className = isConnected ? 'status-dot status-connected' : 'status-dot status-disconnected';
-            }
-        }
+        // ==================== FUNÇÕES DE LOGIN/LOGOUT ====================
         
         // Função de login
         function handleLogin() {
@@ -1433,6 +1314,8 @@
             showLogin();
         }
         
+        // ==================== FUNÇÕES DE ATIVIDADES ====================
+        
         // Carregar atividades do Supabase
         async function loadActivitiesFromSupabase() {
             if (!supabase) {
@@ -1516,89 +1399,6 @@
             } catch (error) {
                 console.error('❌ Erro ao salvar no localStorage:', error);
             }
-        }
-        
-        // Configurar interface da aplicação
-        function setupInterface() {
-            // Configurar o formulário de atividade
-            const activityForm = document.getElementById('activity-form');
-            if (activityForm) {
-                activityForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    addActivity();
-                });
-            }
-            
-            // Validar horários
-            const startTime = document.getElementById('start-time');
-            const endTime = document.getElementById('end-time');
-            
-            if (startTime) startTime.addEventListener('change', validateTimeRange);
-            if (endTime) endTime.addEventListener('change', validateTimeRange);
-            
-            // Configurar botões de seleção de dia
-            document.querySelectorAll('.day-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const day = this.getAttribute('data-day');
-                    
-                    // Ativar botão clicado
-                    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    
-                    // Mostrar atividades do dia selecionado
-                    showDayActivities(day);
-                });
-            });
-        }
-        
-        // Função para validar intervalo de tempo
-        function validateTimeRange() {
-            const startTime = document.getElementById('start-time').value;
-            const endTime = document.getElementById('end-time').value;
-            const errorElement = document.getElementById('time-error');
-            
-            if (startTime && endTime) {
-                const start = parseTime(startTime);
-                const end = parseTime(endTime);
-                
-                if (end <= start) {
-                    if (errorElement) errorElement.style.display = 'block';
-                    return false;
-                }
-            }
-            
-            if (errorElement) errorElement.style.display = 'none';
-            return true;
-        }
-        
-        // Converter horário string para minutos
-        function parseTime(timeStr) {
-            const [hours, minutes] = timeStr.split(':').map(Number);
-            return hours * 60 + minutes;
-        }
-        
-        // Calcular duração em horas
-        function calculateDuration(startTime, endTime) {
-            const start = parseTime(startTime);
-            const end = parseTime(endTime);
-            const durationMinutes = end - start;
-            return durationMinutes / 60;
-        }
-        
-        // Formatar duração para exibição
-        function formatDuration(durationHours) {
-            const hours = Math.floor(durationHours);
-            const minutes = Math.round((durationHours - hours) * 60);
-            
-            if (hours === 0) return `${minutes}min`;
-            if (minutes === 0) return `${hours}h`;
-            return `${hours}h${minutes}min`;
-        }
-        
-        // Calcular tempo total de atividades do dia
-        function calculateDayTotal(day) {
-            const activities = travelActivities[day] || [];
-            return activities.reduce((total, activity) => total + activity.duration, 0);
         }
         
         // Adicionar atividade
@@ -1724,6 +1524,102 @@
             renderDayActivities(day);
         }
         
+        // ==================== FUNÇÕES AUXILIARES ====================
+        
+        // Atualizar status da conexão
+        function updateConnectionStatus(message, isConnected) {
+            const statusDot = document.getElementById('status-dot');
+            const statusText = document.getElementById('status-text');
+            
+            if (statusText) statusText.textContent = message;
+            if (statusDot) {
+                statusDot.className = isConnected ? 'status-dot status-connected' : 'status-dot status-disconnected';
+            }
+        }
+        
+        // Configurar interface da aplicação
+        function setupInterface() {
+            // Configurar o formulário de atividade
+            const activityForm = document.getElementById('activity-form');
+            if (activityForm) {
+                activityForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    addActivity();
+                });
+            }
+            
+            // Validar horários
+            const startTime = document.getElementById('start-time');
+            const endTime = document.getElementById('end-time');
+            
+            if (startTime) startTime.addEventListener('change', validateTimeRange);
+            if (endTime) endTime.addEventListener('change', validateTimeRange);
+            
+            // Configurar botões de seleção de dia
+            document.querySelectorAll('.day-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const day = this.getAttribute('data-day');
+                    
+                    // Ativar botão clicado
+                    document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Mostrar atividades do dia selecionado
+                    showDayActivities(day);
+                });
+            });
+        }
+        
+        // Função para validar intervalo de tempo
+        function validateTimeRange() {
+            const startTime = document.getElementById('start-time').value;
+            const endTime = document.getElementById('end-time').value;
+            const errorElement = document.getElementById('time-error');
+            
+            if (startTime && endTime) {
+                const start = parseTime(startTime);
+                const end = parseTime(endTime);
+                
+                if (end <= start) {
+                    if (errorElement) errorElement.style.display = 'block';
+                    return false;
+                }
+            }
+            
+            if (errorElement) errorElement.style.display = 'none';
+            return true;
+        }
+        
+        // Converter horário string para minutos
+        function parseTime(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
+        
+        // Calcular duração em horas
+        function calculateDuration(startTime, endTime) {
+            const start = parseTime(startTime);
+            const end = parseTime(endTime);
+            const durationMinutes = end - start;
+            return durationMinutes / 60;
+        }
+        
+        // Formatar duração para exibição
+        function formatDuration(durationHours) {
+            const hours = Math.floor(durationHours);
+            const minutes = Math.round((durationHours - hours) * 60);
+            
+            if (hours === 0) return `${minutes}min`;
+            if (minutes === 0) return `${hours}h`;
+            return `${hours}h${minutes}min`;
+        }
+        
+        // Calcular tempo total de atividades do dia
+        function calculateDayTotal(day) {
+            const activities = travelActivities[day] || [];
+            return activities.reduce((total, activity) => total + activity.duration, 0);
+        }
+        
         // Renderizar atividades de um dia
         function renderDayActivities(day) {
             const container = document.getElementById(`day-${day}`);
@@ -1745,7 +1641,9 @@
             
             // Remover mensagem de "nenhuma atividade"
             const noActivitiesMsg = container.querySelector('.no-activities');
-            if (noActivitiesMsg) noActivitiesMsg.remove();
+            if (noActivitiesMsg) {
+                noActivitiesMsg.remove();
+            }
             
             // Adicionar atividades
             if (activitiesList.length === 0) {
