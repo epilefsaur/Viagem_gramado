@@ -144,24 +144,6 @@
             color: var(--primary);
         }
         
-        .login-info ul {
-            list-style: none;
-            text-align: left;
-        }
-        
-        .login-info li {
-            margin-bottom: 5px;
-            padding-left: 20px;
-            position: relative;
-        }
-        
-        .login-info li:before {
-            content: "•";
-            color: var(--primary);
-            position: absolute;
-            left: 0;
-        }
-        
         .user-credentials {
             display: flex;
             gap: 20px;
@@ -705,11 +687,6 @@
             50% { opacity: 1; }
             100% { opacity: 0.6; }
         }
-        
-        /* Ajustes para melhor visualização */
-        .form-group input[type="text"] {
-            margin-top: 5px;
-        }
     </style>
 </head>
 <body>
@@ -718,28 +695,28 @@
         <div class="login-box">
             <div class="login-logo">
                 <h1><i class="fas fa-plane"></i> Viagem Compartilhada</h1>
-                <p>Gramado 2026 - Sistema Compartilhado em Tempo Real</p>
+                <p>Gramado 2026 - Sistema Compartilhado</p>
             </div>
             
-            <form class="login-form" id="login-form">
+            <div class="login-form" id="login-form">
                 <div class="form-group">
                     <label for="username">Usuário:</label>
-                    <input type="text" id="username" placeholder="Digite seu usuário" required autocomplete="username">
+                    <input type="text" id="username" placeholder="Digite seu usuário" required>
                 </div>
                 
                 <div class="form-group">
                     <label for="password">Senha:</label>
-                    <input type="password" id="password" placeholder="Digite sua senha" required autocomplete="current-password">
+                    <input type="password" id="password" placeholder="Digite sua senha" required>
                 </div>
                 
-                <button type="submit" class="btn-login">
+                <button type="button" class="btn-login" id="login-button">
                     <i class="fas fa-sign-in-alt"></i> Entrar
                 </button>
                 
                 <div class="login-error" id="login-error">
                     Usuário ou senha incorretos!
                 </div>
-            </form>
+            </div>
             
             <div class="login-info">
                 <h4><i class="fas fa-info-circle"></i> Credenciais de Acesso</h4>
@@ -944,7 +921,6 @@
 
     <script>
         // ==================== CONFIGURAÇÃO DO SUPABASE ====================
-        // SUAS CREDENCIAIS JÁ ESTÃO CONFIGURADAS AQUI (HARDCODED)
         const SUPABASE_URL = 'https://forpfassxqfjwqhaotod.supabase.co';
         const SUPABASE_ANON_KEY = 'sb_publishable_jYYdY6U6W7CnUCHJPcyu-Q_NGN-S3u5';
         
@@ -981,6 +957,25 @@
             console.log('🚀 Sistema de Viagem carregado!');
             console.log('🔗 Supabase configurado:', SUPABASE_URL);
             
+            // Configurar botão de login - MUDANÇA CRÍTICA AQUI
+            const loginButton = document.getElementById('login-button');
+            if (loginButton) {
+                loginButton.addEventListener('click', function(e) {
+                    e.preventDefault(); // IMPEDIR COMPORTAMENTO PADRÃO
+                    console.log('📝 Botão de login clicado');
+                    handleLogin();
+                });
+            }
+            
+            // Configurar logout
+            const logoutBtn = document.getElementById('btn-logout');
+            if (logoutBtn) {
+                logoutBtn.addEventListener('click', function() {
+                    console.log('👋 Usuário solicitou logout');
+                    handleLogout();
+                });
+            }
+            
             // Verificar se já está logado
             const savedUser = localStorage.getItem('travelLoggedUser');
             if (savedUser) {
@@ -988,7 +983,6 @@
                     currentUser = JSON.parse(savedUser);
                     console.log('✅ Usuário recuperado:', currentUser.fullName);
                     
-                    // Verificar se o usuário ainda existe
                     if (users[currentUser.username]) {
                         initSupabase();
                         showMainApp();
@@ -1006,25 +1000,6 @@
                 console.log('👤 Nenhum usuário logado, mostrando tela de login');
                 showLogin();
             }
-            
-            // Configurar formulário de login
-            const loginForm = document.getElementById('login-form');
-            if (loginForm) {
-                loginForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    console.log('📝 Formulário de login submetido');
-                    handleLogin();
-                });
-            }
-            
-            // Configurar logout
-            const logoutBtn = document.getElementById('btn-logout');
-            if (logoutBtn) {
-                logoutBtn.addEventListener('click', function() {
-                    console.log('👋 Usuário solicitou logout');
-                    handleLogout();
-                });
-            }
         });
         
         // ==================== FUNÇÕES DO SUPABASE ====================
@@ -1035,7 +1010,6 @@
                 console.log('🔗 Inicializando Supabase com suas credenciais...');
                 supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                 
-                // Testar conexão
                 testSupabaseConnection();
                 
             } catch (error) {
@@ -1051,7 +1025,6 @@
             try {
                 updateConnectionStatus("Conectando ao Supabase...", true);
                 
-                // Teste simples de conexão
                 const { data, error } = await supabase
                     .from('travel_activities')
                     .select('count')
@@ -1060,7 +1033,6 @@
                 if (error) {
                     console.error('❌ Erro na conexão Supabase:', error);
                     
-                    // Verificar se é erro de tabela não existente
                     if (error.message.includes('relation') && error.message.includes('does not exist')) {
                         updateConnectionStatus("Tabela não encontrada. Crie a tabela no Supabase.", false);
                         alert('⚠️ ATENÇÃO: Tabela não encontrada no Supabase!\n\nPara criar a tabela, vá no SQL Editor do Supabase e execute:\n\nCREATE TABLE travel_activities (\n  id BIGSERIAL PRIMARY KEY,\n  day_number INTEGER NOT NULL,\n  start_time VARCHAR(5) NOT NULL,\n  end_time VARCHAR(5) NOT NULL,\n  title TEXT NOT NULL,\n  description TEXT,\n  duration NUMERIC(4,2),\n  created_by VARCHAR(50),\n  created_at TIMESTAMP DEFAULT NOW()\n);\n\nALTER TABLE travel_activities ENABLE ROW LEVEL SECURITY;\nCREATE POLICY "Permitir todas as operações" ON travel_activities FOR ALL USING (true);');
@@ -1073,10 +1045,7 @@
                     document.getElementById('sync-status').textContent = "Conectado ao Supabase";
                     document.getElementById('footer-mode').textContent = "Conectado ao Supabase • Compartilhamento em tempo real";
                     
-                    // Carregar atividades
                     loadActivitiesFromSupabase();
-                    
-                    // Configurar subscription em tempo real
                     setupRealtimeSubscription();
                 }
                 
@@ -1091,7 +1060,6 @@
             if (!supabase) return;
             
             try {
-                // Cancelar subscription anterior se existir
                 if (realtimeSubscription) {
                     supabase.removeChannel(realtimeSubscription);
                 }
@@ -1127,7 +1095,6 @@
             let message = '';
             let userName = payload.new?.created_by || 'Outro usuário';
             
-            // Traduzir username para nome completo
             if (users[userName]) {
                 userName = users[userName].fullName;
             }
@@ -1140,7 +1107,6 @@
                 message = `${userName} removeu uma atividade`;
             }
             
-            // Criar notificação
             const notification = document.createElement('div');
             notification.style.cssText = `
                 position: fixed;
@@ -1169,7 +1135,6 @@
             
             document.body.appendChild(notification);
             
-            // Remover após 5 segundos
             setTimeout(() => {
                 notification.style.animation = 'slideOut 0.3s ease-out';
                 setTimeout(() => {
@@ -1182,14 +1147,11 @@
         
         // ==================== FUNÇÕES DE LOGIN/LOGOUT ====================
         
-        // Função de login
+        // Função de login - CORRIGIDA
         function handleLogin() {
-            const usernameInput = document.getElementById('username');
-            const passwordInput = document.getElementById('password');
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
             const errorElement = document.getElementById('login-error');
-            
-            const username = usernameInput.value.trim();
-            const password = passwordInput.value;
             
             console.log('🔐 Tentativa de login:', username);
             
@@ -1208,17 +1170,17 @@
             const user = users[username];
             if (!user) {
                 showError('Usuário não encontrado!<br>Use: felipe.ruas ou bruna.silva');
-                usernameInput.value = '';
-                passwordInput.value = '';
-                usernameInput.focus();
+                document.getElementById('username').value = '';
+                document.getElementById('password').value = '';
+                document.getElementById('username').focus();
                 return;
             }
             
             // Verificar senha
             if (user.password !== password) {
                 showError('Senha incorreta!<br>Tente novamente.');
-                passwordInput.value = '';
-                passwordInput.focus();
+                document.getElementById('password').value = '';
+                document.getElementById('password').focus();
                 return;
             }
             
@@ -1428,7 +1390,6 @@
             
             try {
                 if (supabase) {
-                    // Tentar salvar no Supabase
                     const { data, error } = await supabase
                         .from('travel_activities')
                         .insert([
@@ -1449,7 +1410,6 @@
                     console.log('✅ Atividade salva no Supabase:', data);
                     
                 } else {
-                    // Modo local
                     saveActivityLocally(day, startTime, endTime, title, desc, duration);
                     alert('Atividade adicionada (modo local)!');
                 }
@@ -1460,7 +1420,6 @@
             } catch (error) {
                 console.error('❌ Erro ao salvar atividade:', error);
                 
-                // Fallback para modo local
                 saveActivityLocally(day, startTime, endTime, title, desc, duration);
                 alert('Erro ao conectar com Supabase. Atividade salva localmente.');
             }
@@ -1507,7 +1466,6 @@
                     console.log('✅ Atividade removida do Supabase:', activityId);
                     
                 } else {
-                    // Modo local
                     removeActivityLocally(activityId, day);
                 }
                 
@@ -1560,11 +1518,9 @@
                 btn.addEventListener('click', function() {
                     const day = this.getAttribute('data-day');
                     
-                    // Ativar botão clicado
                     document.querySelectorAll('.day-btn').forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
                     
-                    // Mostrar atividades do dia selecionado
                     showDayActivities(day);
                 });
             });
