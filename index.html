@@ -1647,7 +1647,7 @@
         
         // Estado da aplicação
         let currentUser = null;
-        let supabase = null;
+        let supabaseClient = null;
         let travelActivities = {
             "18": [], "19": [], "20": [], "21": []
         };
@@ -1694,10 +1694,13 @@
             }
             
             // Configurar formulário de login
-            document.getElementById('login-form').addEventListener('submit', function(e) {
-                e.preventDefault();
-                handleLogin();
-            });
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', function(e) {
+                    e.preventDefault();
+                    handleLogin();
+                });
+            }
             
             // Configurar logout
             document.getElementById('btn-logout').addEventListener('click', function() {
@@ -1794,7 +1797,7 @@
         // Inicializar Supabase
         function initSupabase() {
             if (SUPABASE_URL && SUPABASE_ANON_KEY) {
-                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                 updateConnectionStatus("Conectando ao servidor...", true);
                 
                 // Carregar atividades
@@ -1918,10 +1921,10 @@
         
         // Configurar subscription em tempo real
         function setupRealtimeSubscription() {
-            if (!supabase) return;
+            if (!supabaseClient) return;
             
             try {
-                const channel = supabase
+                const channel = supabaseClient
                     .channel('travel-activities-changes')
                     .on(
                         'postgres_changes',
@@ -2008,7 +2011,7 @@
         
         // Carregar atividades do Supabase
         async function loadActivitiesFromSupabase() {
-            if (!supabase) {
+            if (!supabaseClient) {
                 loadFromLocalStorage();
                 return;
             }
@@ -2016,7 +2019,7 @@
             try {
                 updateConnectionStatus("Carregando atividades...", true);
                 
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('travel_activities')
                     .select('*')
                     .order('start_time', { ascending: true });
@@ -2202,9 +2205,9 @@
             try {
                 updateConnectionStatus("Salvando atividade...", true);
                 
-                if (supabase) {
+                if (supabaseClient) {
                     // Inserir no Supabase
-                    const { data, error } = await supabase
+                    const { data, error } = await supabaseClient
                         .from('travel_activities')
                         .insert([
                             {
@@ -2322,9 +2325,9 @@
             const duration = calculateDuration(startTime, endTime);
             
             try {
-                if (supabase) {
+                if (supabaseClient) {
                     // Atualizar no Supabase
-                    const { error } = await supabase
+                    const { error } = await supabaseClient
                         .from('travel_activities')
                         .update({
                             day_number: parseInt(newDay),
@@ -2405,8 +2408,8 @@
             if (!confirm('Tem certeza que deseja remover esta atividade?')) return;
             
             try {
-                if (supabase) {
-                    const { error } = await supabase
+                if (supabaseClient) {
+                    const { error } = await supabaseClient
                         .from('travel_activities')
                         .delete()
                         .eq('id', activityId);
